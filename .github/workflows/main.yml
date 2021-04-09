@@ -20,8 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         container: ['macos:10.15', 'macos:10.14', 'macos:10.13', 'macos:10.12']
-    runs-on: macos-latest
-    container: ${{ matrix.container }}
+    runs-on: ${{ matrix.container }}
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v2
