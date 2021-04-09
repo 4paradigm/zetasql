@@ -6,7 +6,7 @@ name: Build
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master, dev ]
+    branches: [ master, dev, macos ]
   pull_request:
     brancheds: [ master ]
 
@@ -16,7 +16,12 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   mac-build:
-    runs-on: macos-10.14
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ['macos:10.15', 'macos:10.14', 'macos:10.13', 'macos:10.12']
+    runs-on: macos-latest
+    container: ${{ matrix.container }}
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v2
@@ -27,6 +32,7 @@ jobs:
 
       - name: print toolchain info
         run: |
+          system_profiler SPSoftwareDataType
           gcc -v
           g++ -v
           python -V
