@@ -495,6 +495,10 @@ genyacc(
 
 [gen_parser_test(
     filename = f.split("/")[-1],
+    srcs = select({
+    "@bazel_tools//src/conditions:darwin": ["run_parser_test.cc"],
+     "//conditions:default": [],
+  }),
 ) for f in glob(["testdata/*.test"])]
 
 bzl_library(
