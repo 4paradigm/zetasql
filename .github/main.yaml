@@ -1,0 +1,174 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  target: '//zetasql/parser/...'
+  build_argv: ''
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  linux-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ['debian:buster', 'ubuntu:bionic', 'ubuntu:focal', 'archlinux:latest', 'centos:8']
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    timeout-minutes: 120
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: setup java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '11'
+
+      - name: install deps (debian)
+        if: ${{ startsWith(matrix.container, 'debian') || startsWith(matrix.container, 'ubuntu') }}
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl build-essential unzip python3
+          update-alternatives --install /usr/bin/python python /usr/bin/python3 100
+
+      - name: choose python (ubuntu:bionic)
+        if: ${{ matrix.container == 'ubuntu:bionic' }}
+        run: |
+          apt-get install -y gcc-8 g++-8 python3.8
+          update-alternatives --install /usr/bin/python python /usr/bin/python3.8 200
+          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80 --slave /usr/bin/g++ g++ /usr/bin/g++-8 --slave /usr/bin/gcov gcov /usr/bin/gcov-8
+
+      - name: install deps (arch)
+        if: ${{ startsWith(matrix.container, 'archlinux') }}
+        run: |
+          pacman -Sy --noconfirm curl base-devel unzip python
+
+      - name: install deps (centos8)
+        if: ${{ startsWith(matrix.container, 'centos') }}
+        run: |
+          yum install -y curl unzip python38
+          yum group install -y 'Development Tools'
+          alternatives --set python /usr/bin/python3.8
+
+      # Runs a single command using the runners shell
+      - name: Install Bazelisk
+        run: |
+          curl --create-dirs -SLo /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v1.7.5/bazelisk-linux-amd64
+          chmod +x /usr/local/bin/bazel
+
+      - name: print toolchain info
+        run: |
+          ldd --version
+          gcc -v
+          g++ -v
+          python -V
+          java -version
+
+      - name: Build
+        run: |
+          bazel build ${{ env.build_argv }} ${{ env.target }}
+
+      - name: Test
+        run: |
+          bazel test ${{ env.build_argv }} --test_summary=detailed ${{ env.target }}
+
+  mac-build:
+    runs-on: macos-latest
+    timeout-minutes: 120
+    env:
+      build_argv: '--features=-supports_dynamic_linker '
+      bazel_version: '3.7.2'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: update bazel version
+        run: echo ${{ env.bazel_version }} > .bazelversion
+        
+      - name: install bazelisk
+        run: |
+          brew install bazelisk
+
+      - name: print toolchain info
+        run: |
+          gcc -v
+          g++ -v
+          python -V
+          java -version
+
+      - name: build
+        run: |
+          bazel build ${{ env.build_argv }} ${{ env.target }}
+
+      - name: test
+        run: |
+          bazel test ${{ env.build_argv }} --test_summary=detailed ${{ env.target }}
+
+  centos7-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain: ['devtoolset-7', 'devtoolset-8', 'devtoolset-9']
+        container: ['centos:7']
+
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    timeout-minutes: 120
+    env:
+      BAZEL_LINKOPTS: '-static-libstdc++:-lm'
+      BAZEL_LINKLIBS: '-l%:libstdc++.a'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install deps (centos)
+        run: |
+          yum install -y java-11-openjdk-devel curl unzip
+          yum install -y centos-release-scl
+          yum install -y ${{ matrix.toolchain }} rh-python38
+
+      - name: Install Bazelisk
+        run: |
+          curl --create-dirs -SLo /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v1.7.5/bazelisk-linux-amd64
+          chmod +x /usr/local/bin/bazel
+
+      - name: print toolchain info
+        run: |
+          source /opt/rh/${{ matrix.toolchain }}/enable
+          source /opt/rh/rh-python38/enable
+          ldd --version
+          gcc -v
+          g++ -v
+          python -V
+          java -version
+
+      # Runs a set of commands using the runners shell
+      - name: Build
+        run: |
+          source /opt/rh/${{ matrix.toolchain }}/enable
+          source /opt/rh/rh-python38/enable
+          bazel build ${{ env.build_argv }} ${{ env.target }}
+
+      - name: Test
+        run: |
+          source /opt/rh/${{ matrix.toolchain }}/enable
+          source /opt/rh/rh-python38/enable
+          bazel test ${{ env.build_argv }} --test_summary=detailed --test_output=errors ${{ env.target }}
+
+
