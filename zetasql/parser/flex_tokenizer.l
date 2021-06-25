@@ -605,6 +605,7 @@ source { return BisonParserImpl::token::KW_SOURCE; }
 sql { return BisonParserImpl::token::KW_SQL; }
 stable { return BisonParserImpl::token::KW_STABLE; }
 start { return BisonParserImpl::token::KW_START; }
+status { return BisonParserImpl::token::KW_STATUS; }
 stored { return BisonParserImpl::token::KW_STORED; }
 storing { return BisonParserImpl::token::KW_STORING; }
 struct { return BisonParserImpl::token::KW_STRUCT; }

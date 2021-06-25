@@ -27,6 +27,14 @@ ShowStatement [0-11]
 SHOW TABLES
 ==
 
+show DATABASES;
+--
+ShowStatement [0-14]
+  Identifier(DATABASES) [5-14]
+--
+SHOW DATABASES
+==
+
 show TABLES from;
 --
 ERROR: Syntax error: Unexpected ";" [at 1:17]
@@ -141,6 +149,35 @@ ShowStatement [0-23]
   Identifier(`MATERIALIZED VIEWS`) [5-23]
 --
 SHOW `MATERIALIZED VIEWS`
+==
+
+SHOW PROCEDURE STATUS;
+--
+ShowStatement [0-21]
+  Identifier(`PROCEDURE STATUS`) [5-21]
+--
+SHOW `PROCEDURE STATUS`
+==
+
+SHOW CREATE PROCEDURE name;
+--
+ShowStatement [0-26]
+  Identifier(`CREATE PROCEDURE`) [5-21]
+  PathExpression [22-26]
+    Identifier(name) [22-26]
+--
+SHOW `CREATE PROCEDURE` FROM name
+==
+
+SHOW CREATE PROCEDURE db.name;
+--
+ShowStatement [0-29]
+  Identifier(`CREATE PROCEDURE`) [5-21]
+  PathExpression [22-29]
+    Identifier(db) [22-24]
+    Identifier(name) [25-29]
+--
+SHOW `CREATE PROCEDURE` FROM db.name
 ==
 
 SHOW `MATERIALIZED VIEWS`;

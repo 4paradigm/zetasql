@@ -903,6 +903,7 @@ using zetasql::ASTDropStatement;
 %token KW_SQL "SQL"
 %token KW_STABLE "STABLE"
 %token KW_START "START"
+%token KW_STATUS "STATUS"
 %token KW_STORED "STORED"
 %token KW_STORING "STORING"
 %token KW_SYSTEM "SYSTEM"
@@ -1259,6 +1260,7 @@ using zetasql::ASTDropStatement;
 %type <node> select_list_prefix
 %type <node> show_statement
 %type <identifier> show_target
+%type <identifier> show_create_procedure_target
 %type <node> simple_column_schema_inner
 %type <node> sql_function_body
 %type <node> star_except_list
@@ -3487,6 +3489,10 @@ show_statement:
       {
         $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3, $4});
       }
+    | "SHOW" show_create_procedure_target path_expression
+      {
+        $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3});
+      }
     ;
 
 show_target:
@@ -3494,9 +3500,20 @@ show_target:
     {
       $$ = parser->MakeIdentifier(@$, "MATERIALIZED VIEWS");
     }
+  | "PROCEDURE" "STATUS"
+    {
+      $$ = parser->MakeIdentifier(@$, "PROCEDURE STATUS");
+    }
   | identifier
     {
       $$ = $1;
+    }
+  ;
+
+show_create_procedure_target:
+  "CREATE" "PROCEDURE"
+    {
+      $$ = parser->MakeIdentifier(@$, "CREATE PROCEDURE");
     }
   ;
 
@@ -7320,6 +7337,7 @@ keyword_as_identifier:
     | "SQL"
     | "STABLE"
     | "START"
+    | "STATUS"
     | "STORED"
     | "STORING"
     | "SYSTEM"

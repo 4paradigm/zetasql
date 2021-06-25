@@ -263,6 +263,7 @@ constexpr KeywordInfoPOD kAllKeywords[] = {
     {"sql", KW_SQL},
     {"stable", KW_STABLE},
     {"start", KW_START},
+    {"status", KW_STATUS},
     {"stored", KW_STORED},
     {"struct", KW_STRUCT, KeywordInfo::kReserved},
     {"system", KW_SYSTEM},
