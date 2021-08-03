@@ -21,8 +21,11 @@ set -eE
 pushd "$(dirname "$0")"
 pushd "$(git rev-parse --show-toplevel)"
 
-export BAZEL_LINKOPTS='-static-libstdc++:-lm'
-export BAZEL_LINKLIBS='-l%:libstdc++.a'
+if grep -q centos /etc/os-release ; then
+    # for thoese using rhel devtoolset
+    export BAZEL_LINKOPTS='-static-libstdc++:-lm'
+    export BAZEL_LINKLIBS='-l%:libstdc++.a'
+fi
 
 if [[ $(arch) = 'aarch64' ]]; then
     # need upgrade abseil and bazel to compile on aarch64
