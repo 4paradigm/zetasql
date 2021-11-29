@@ -1906,6 +1906,12 @@ void Unparser::visitASTBetweenExpression(const ASTBetweenExpression* node,
   PrintCloseParenIfNeeded(node);
 }
 
+void Unparser::visitASTEscapedExpression(const ASTEscapedExpression* node, void* data) {
+  node->expr()->Accept(this, data);
+  print("ESCAPE");
+  node->escape()->Accept(this, data);
+}
+
 void Unparser::visitASTFunctionCall(const ASTFunctionCall* node, void* data) {
   PrintOpenParenIfNeeded(node);
   node->function()->Accept(this, data);

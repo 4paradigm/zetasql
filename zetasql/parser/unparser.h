@@ -382,6 +382,7 @@ class Unparser : public ParseTreeVisitor {
       const ASTIndexUnnestExpressionList* node, void* data) override;
   void visitASTBetweenExpression(const ASTBetweenExpression* node,
                                  void* data) override;
+  void visitASTEscapedExpression(const ASTEscapedExpression* node, void* data) override;
   void visitASTFunctionCall(const ASTFunctionCall* node, void* data) override;
   void visitASTWithGroupRows(const ASTWithGroupRows* node, void* data) override;
   void visitASTArrayElement(const ASTArrayElement* node, void* data) override;

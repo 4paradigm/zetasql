@@ -2162,6 +2162,32 @@ class ASTBetweenExpression final : public ASTExpression {
   const ASTExpression* high_ = nullptr;
 };
 
+// expression ESCAPE string_literal
+//  it is used for LIKE predicate's pattern.
+//  e.g: 'a_c' LIKE 'a$_c' ESCAPE '$'
+class ASTEscapedExpression final : public ASTExpression {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_ESCAPED_EXPRESSION;
+  ASTEscapedExpression() : ASTExpression(AST_ESCAPED_EXPRESSION) {}
+
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const ASTExpression* expr() const { return expr_; }
+  const ASTStringLiteral* escape() const { return escape_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&expr_);
+    fl.AddRequired(&escape_);
+  }
+
+  const ASTExpression* expr_ = nullptr;
+  const ASTStringLiteral* escape_ = nullptr;
+};
+
 class ASTUnaryExpression final : public ASTExpression {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_UNARY_EXPRESSION;

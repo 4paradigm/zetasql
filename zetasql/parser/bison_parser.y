@@ -556,7 +556,7 @@ class DashedIdentifierTmpNode final : public zetasql::ASTNode {
 %left "AND"
 %left "XOR"
 %left UNARY_NOT_PRECEDENCE
-%nonassoc "=" "==" "<>" ">" "<" ">=" "<=" "!=" "LIKE" "IN" "DISTINCT" "BETWEEN" "IS" "NOT_SPECIAL"
+%nonassoc "=" "==" "<>" ">" "<" ">=" "<=" "!=" "LIKE" "IN" "DISTINCT" "BETWEEN" "IS" "NOT_SPECIAL" "ESCAPE"
 %left "|"
 %left "^"
 %left "&"
@@ -1080,7 +1080,7 @@ using zetasql::ASTDropStatement;
 %type <node> import_statement
 %type <node> load_statement
 %type <node> load_data_statement
-%type <node> into_statement 
+%type <node> into_statement
 %type <node> select_into_statement 
 %type <node> variable_declaration
 %type <node> opt_default_expression
@@ -1590,7 +1590,7 @@ sql_statement_body:
     | use_statement
     | deploy_statement
     | load_statement
-    | select_into_statement 
+    | into_statement
     ;
 
 query_statement:
@@ -3389,6 +3389,13 @@ import_statement:
 
 load_statement:
     load_data_statement
+    {
+      $$ = $1;
+    }
+    ;
+
+into_statement:
+    select_into_statement
     {
       $$ = $1;
     }
@@ -5533,6 +5540,10 @@ expression:
           binary_expression->set_is_not($2 == NotKeywordPresence::kPresent);
           binary_expression->set_op(zetasql::ASTBinaryExpression::LIKE);
           $$ = binary_expression;
+        }
+    | expression "ESCAPE" string_literal
+        {
+          $$ = MAKE_NODE(ASTEscapedExpression, @$, {$1, $3})
         }
     | expression distinct_operator expression %prec "DISTINCT"
         {
