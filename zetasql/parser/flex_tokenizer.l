@@ -497,6 +497,7 @@ into { return BisonParserImpl::token::KW_INTO; }
 invoker { return BisonParserImpl::token::KW_INVOKER; }
 is { return BisonParserImpl::token::KW_IS; }
 isolation { return BisonParserImpl::token::KW_ISOLATION; }
+job { return BisonParserImpl::token::KW_JOB; }
 join { return BisonParserImpl::token::KW_JOIN; }
 json { return BisonParserImpl::token::KW_JSON; }
 key { return BisonParserImpl::token::KW_KEY; }

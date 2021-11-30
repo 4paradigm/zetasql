@@ -870,7 +870,7 @@ void Unparser::visitASTShowStatement(const ASTShowStatement* node, void* data) {
   }
 }
 
-void Unparser::visitASTShowTargetExpression(const ASTShowTargetExpression* node, void* data) {
+void Unparser::visitASTTargetExpression(const ASTTargetExpression* node, void* data) {
   node->target()->Accept(this, data);
 }
 
@@ -2319,6 +2319,10 @@ void Unparser::visitASTDeleteStatement(const ASTDeleteStatement* node,
   print("DELETE");
   // GetTargetPathForNested() is strictly more general than "ForNonNested()".
   node->GetTargetPathForNested()->Accept(this, data);
+
+  if (node->opt_target_name() != nullptr) {
+    node->opt_target_name()->Accept(this, data);
+  }
   if (node->alias() != nullptr) {
     node->alias()->Accept(this, data);
   }

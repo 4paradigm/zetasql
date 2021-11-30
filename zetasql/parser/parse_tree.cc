@@ -350,7 +350,7 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_WITH_CONNECTION_CLAUSE] = "WithConnectionClause";
   map[AST_WITH_GROUP_ROWS] = "WithGroupRows";
   map[AST_WITH_OFFSET] = "WithOffset";
-  map[AST_SHOW_TARGET_EXPRESSION] = "ShowTargetExpression";
+  map[AST_TARGET_EXPRESSION] = "TargetExpression";
   map[AST_DEPLOY_STATEMENT] = "DeployStatement";
   map[AST_LOAD_DATA_STATEMENT] = "LoadDataStatement";
   map[AST_SELECT_INTO_STATEMENT] = "SelectIntoStatement";

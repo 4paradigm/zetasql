@@ -852,6 +852,7 @@ using zetasql::ASTDropStatement;
 %token KW_INVOKER "INVOKER"
 %token KW_ITERATE "ITERATE"
 %token KW_ISOLATION "ISOLATION"
+%token KW_JOB "JOB"
 %token KW_JSON "JSON"
 %token KW_KEY "KEY"
 %token KW_LANGUAGE "LANGUAGE"
@@ -1104,6 +1105,7 @@ using zetasql::ASTDropStatement;
 %type <node> insert_values_row_prefix
 %type <expression> int_literal_or_parameter
 %type <expression> integer_literal
+%type <expression> opt_delete_target_expression
 %type <expression> interval_literal
 %type <node> join
 %type <node> join_input
@@ -1272,7 +1274,7 @@ using zetasql::ASTDropStatement;
 %type <node> select_list
 %type <node> select_list_prefix
 %type <node> show_statement
-%type <expression> show_target_expression
+%type <expression> target_expression
 %type <identifier> show_target
 %type <identifier> show_with_name_target
 %type <node> simple_column_schema_inner
@@ -3544,7 +3546,7 @@ show_statement:
       {
         $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3, $4});
       }
-    | "SHOW" show_with_name_target show_target_expression
+    | "SHOW" show_with_name_target target_expression
       {
         $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3});
       }
@@ -3574,13 +3576,19 @@ show_with_name_target:
     {
       $$ = parser->MakeIdentifier(@$, "DEPLOYMENT");
     }
+  | "JOB"
+    {
+      $$ = parser->MakeIdentifier(@$, "JOB");
+    }
   ;
 
-show_target_expression:
-  path_expression
-  {
-    $$ = MAKE_NODE(ASTShowTargetExpression, @$, {$1});
-  }
+// a tiny wraper over expresion, used when a target comand requires an extra name
+// e.g 1. SHOW target expr 2. DELETE target expr 3. STOP target expr
+target_expression:
+  expression
+    {
+      $$ = MAKE_NODE(ASTTargetExpression, @$, {$1});
+    }
   ;
 
 opt_like_string_literal:
@@ -7359,6 +7367,7 @@ keyword_as_identifier:
     | "INVOKER"
     | "ISOLATION"
     | "ITERATE"
+    | "JOB"
     | "JSON"
     | "KEY"
     | "LANGUAGE"
@@ -7887,13 +7896,20 @@ insert_values_list:
     ;
 
 delete_statement:
-    "DELETE" opt_from_keyword maybe_dashed_generalized_path_expression
+    "DELETE" opt_from_keyword maybe_dashed_generalized_path_expression opt_delete_target_expression
     opt_as_alias opt_with_offset_and_alias opt_where_expression
     opt_assert_rows_modified opt_returning_clause
       {
-        $$ = MAKE_NODE(ASTDeleteStatement, @$, {$3, $4, $5, $6, $7, $8});
+        $$ = MAKE_NODE(ASTDeleteStatement, @$, {$3, $4, $5, $6, $7, $8, $9});
       }
     ;
+
+opt_delete_target_expression:
+    integer_literal
+    {
+      $$ = MAKE_NODE(ASTTargetExpression, @$, {$1});
+    }
+    | /* Nothing */ { $$ = nullptr; }
 
 opt_with_offset_and_alias:
     "WITH" "OFFSET" opt_as_alias
