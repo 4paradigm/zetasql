@@ -14,6 +14,28 @@ StringLiteral('abc') [0-5]
 'abc'
 ==
 
+# like with escape
+col1 like '$_' escape '$'
+--
+BinaryExpression(LIKE) [0-25]
+  PathExpression [0-4]
+    Identifier(col1) [0-4]
+  EscapedExpression [10-25]
+    StringLiteral('$_') [10-14]
+    StringLiteral('$') [22-25]
+--
+col1 LIKE '$_' ESCAPE '$'
+==
+
+# like escape with: not a string literal
+col1 like 'kk' escape abc
+--
+ERROR: Syntax error: Expected string literal but got identifier "abc" [at 1:23]
+col1 like 'kk' escape abc
+                      ^
+==
+
+
 abc + @param + @@sysvar + count(*) + (select 1) + (select x from y)
 --
 BinaryExpression(+) [0-67]

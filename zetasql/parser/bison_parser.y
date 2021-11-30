@@ -556,7 +556,8 @@ class DashedIdentifierTmpNode final : public zetasql::ASTNode {
 %left "AND"
 %left "XOR"
 %left UNARY_NOT_PRECEDENCE
-%nonassoc "=" "==" "<>" ">" "<" ">=" "<=" "!=" "LIKE" "IN" "DISTINCT" "BETWEEN" "IS" "NOT_SPECIAL" "ESCAPE"
+%nonassoc "=" "==" "<>" ">" "<" ">=" "<=" "!=" "LIKE" "IN" "DISTINCT" "BETWEEN" "IS" "NOT_SPECIAL"
+%nonassoc "ESCAPE"
 %left "|"
 %left "^"
 %left "&"
@@ -1081,7 +1082,7 @@ using zetasql::ASTDropStatement;
 %type <node> load_statement
 %type <node> load_data_statement
 %type <node> into_statement
-%type <node> select_into_statement 
+%type <node> select_into_statement
 %type <node> variable_declaration
 %type <node> opt_default_expression
 %type <node> identifier_list
