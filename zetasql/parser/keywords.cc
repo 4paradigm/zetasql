@@ -266,6 +266,7 @@ constexpr KeywordInfoPOD kAllKeywords[] = {
     {"some", KW_SOME, KeywordInfo::kReserved},
     {"source", KW_SOURCE},
     {"storing", KW_STORING},
+    {"stop", KW_STOP},
     {"sql", KW_SQL},
     {"stable", KW_STABLE},
     {"start", KW_START},

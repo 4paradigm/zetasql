@@ -118,6 +118,14 @@ ShowStatement [0-11]
 SHOW JOB 12
 ==
 
+SHOW JOBS;
+--
+ShowStatement [0-9]
+  Identifier(JOBS) [5-9]
+--
+SHOW JOBS
+==
+
 show VARIABLES like 'server_name';
 --
 ShowStatement [0-33]

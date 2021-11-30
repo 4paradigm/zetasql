@@ -875,12 +875,18 @@ void Unparser::visitASTTargetExpression(const ASTTargetExpression* node, void* d
 }
 
 void Unparser::visitASTDeployStatement(const ASTDeployStatement *node, void *data) {
-    print("DEPLOY");
-    if (node->is_if_not_exists()) {
-        print("IF NOT EXISTS");
-    }
-    node->name()->Accept(this, data);
-    node->stmt()->Accept(this, data);
+  print("DEPLOY");
+  if (node->is_if_not_exists()) {
+    print("IF NOT EXISTS");
+  }
+  node->name()->Accept(this, data);
+  node->stmt()->Accept(this, data);
+}
+
+void Unparser::visitASTStopStatement(const ASTStopStatement* node, void* data) {
+  print("STOP");
+  node->identifier()->Accept(this, data);
+  node->target_name()->Accept(this, data);
 }
 
 void Unparser::visitASTBeginStatement(

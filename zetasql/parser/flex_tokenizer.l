@@ -614,6 +614,7 @@ start { return BisonParserImpl::token::KW_START; }
 status { return BisonParserImpl::token::KW_STATUS; }
 stored { return BisonParserImpl::token::KW_STORED; }
 storing { return BisonParserImpl::token::KW_STORING; }
+stop { return BisonParserImpl::token::KW_STOP; }
 struct { return BisonParserImpl::token::KW_STRUCT; }
 system { return BisonParserImpl::token::KW_SYSTEM; }
 system_time { return BisonParserImpl::token::KW_SYSTEM_TIME; }

@@ -673,6 +673,29 @@ class ASTDeployStatement final : public ASTStatement {
   bool is_if_not_exists_ = false;
 };
 
+class ASTStopStatement final : public ASTStatement {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_STOP_STATEMENT;
+
+  ASTStopStatement() : ASTStatement(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const ASTIdentifier* identifier() const { return identifier_; }
+  const ASTTargetExpression* target_name() const { return target_name_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&identifier_);
+    fl.AddRequired(&target_name_);
+  }
+
+  const ASTIdentifier* identifier_ = nullptr;
+  const ASTTargetExpression* target_name_ = nullptr;
+};
+
 // Represents a RENAME statement.
 class ASTRenameStatement final : public ASTStatement {
  public:
