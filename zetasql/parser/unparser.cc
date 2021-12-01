@@ -870,7 +870,7 @@ void Unparser::visitASTShowStatement(const ASTShowStatement* node, void* data) {
   }
 }
 
-void Unparser::visitASTTargetExpression(const ASTTargetExpression* node, void* data) {
+void Unparser::visitASTTargetName(const ASTTargetName* node, void* data) {
   node->target()->Accept(this, data);
 }
 

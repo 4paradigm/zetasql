@@ -191,7 +191,7 @@ class Unparser : public ParseTreeVisitor {
                                  void* data) override;
   void visitASTShowStatement(const ASTShowStatement* node,
                              void* data) override;
-  void visitASTTargetExpression(const ASTTargetExpression* node,
+  void visitASTTargetName(const ASTTargetName* node,
                              void* data) override;
   void visitASTDeployStatement(const ASTDeployStatement* node, void* data) override;
   void visitASTStopStatement(const ASTStopStatement* node, void* data) override;

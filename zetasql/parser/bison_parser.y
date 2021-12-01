@@ -1107,7 +1107,7 @@ using zetasql::ASTDropStatement;
 %type <node> insert_values_row_prefix
 %type <expression> int_literal_or_parameter
 %type <expression> integer_literal
-%type <expression> opt_delete_target_expression
+%type <node> opt_delete_target_name
 %type <expression> interval_literal
 %type <node> join
 %type <node> join_input
@@ -1276,7 +1276,7 @@ using zetasql::ASTDropStatement;
 %type <node> select_list
 %type <node> select_list_prefix
 %type <node> show_statement
-%type <expression> target_expression
+%type <node> target_name
 %type <identifier> show_target
 %type <identifier> show_with_name_target
 %type <node> simple_column_schema_inner
@@ -3549,7 +3549,7 @@ show_statement:
       {
         $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3, $4});
       }
-    | "SHOW" show_with_name_target target_expression
+    | "SHOW" show_with_name_target target_name
       {
         $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3});
       }
@@ -3587,10 +3587,10 @@ show_with_name_target:
 
 // a tiny wraper over expresion, used when a target comand requires an extra name
 // e.g 1. SHOW target expr 2. DELETE target expr 3. STOP target expr
-target_expression:
+target_name:
   expression
     {
-      $$ = MAKE_NODE(ASTTargetExpression, @$, {$1});
+      $$ = MAKE_NODE(ASTTargetName, @$, {$1});
     }
   ;
 
@@ -7900,7 +7900,7 @@ insert_values_list:
     ;
 
 delete_statement:
-    "DELETE" opt_from_keyword maybe_dashed_generalized_path_expression opt_delete_target_expression
+    "DELETE" opt_from_keyword maybe_dashed_generalized_path_expression opt_delete_target_name
     opt_as_alias opt_with_offset_and_alias opt_where_expression
     opt_assert_rows_modified opt_returning_clause
       {
@@ -7908,10 +7908,10 @@ delete_statement:
       }
     ;
 
-opt_delete_target_expression:
+opt_delete_target_name:
     integer_literal
     {
-      $$ = MAKE_NODE(ASTTargetExpression, @$, {$1});
+      $$ = MAKE_NODE(ASTTargetName, @$, {$1});
     }
     | /* Nothing */ { $$ = nullptr; }
 
@@ -8248,7 +8248,7 @@ deploy_statement:
     ;
 
 stop_statement:
-    "STOP" identifier target_expression
+    "STOP" identifier target_name
     {
       $$ = MAKE_NODE(ASTStopStatement, @$, {$2, $3});
     }

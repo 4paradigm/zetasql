@@ -12,7 +12,7 @@ delete JOB 12
 DeleteStatement [0-13]
   PathExpression [7-10]
     Identifier(JOB) [7-10]
-  TargetExpression [11-13]
+  TargetName [11-13]
     IntLiteral(12) [11-13]
 --
 DELETE JOB 12

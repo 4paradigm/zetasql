@@ -112,7 +112,7 @@ show JOB 12;
 --
 ShowStatement [0-11]
   Identifier(JOB) [5-8]
-  TargetExpression [9-11]
+  TargetName [9-11]
     IntLiteral(12) [9-11]
 --
 SHOW JOB 12
@@ -181,7 +181,7 @@ SHOW CREATE PROCEDURE name;
 --
 ShowStatement [0-26]
   Identifier(`CREATE PROCEDURE`) [5-21]
-  TargetExpression [22-26]
+  TargetName [22-26]
     PathExpression [22-26]
       Identifier(name) [22-26]
 --
@@ -192,7 +192,7 @@ SHOW CREATE PROCEDURE db.name;
 --
 ShowStatement [0-29]
   Identifier(`CREATE PROCEDURE`) [5-21]
-  TargetExpression [22-29]
+  TargetName [22-29]
     PathExpression [22-29]
       Identifier(db) [22-24]
       Identifier(name) [25-29]
@@ -212,7 +212,7 @@ SHOW DEPLOYMENT deploy_service_1;
 --
 ShowStatement [0-32]
   Identifier(DEPLOYMENT) [5-15]
-  TargetExpression [16-32]
+  TargetName [16-32]
     PathExpression [16-32]
       Identifier(deploy_service_1) [16-32]
 --
