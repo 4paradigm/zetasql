@@ -1,0 +1,20 @@
+stop JOB 12;
+--
+StopStatement [0-11]
+  Identifier(JOB) [5-8]
+  TargetName [9-11]
+    IntLiteral(12) [9-11]
+--
+STOP JOB 12
+==
+
+stop JOB abc;
+--
+StopStatement [0-12]
+  Identifier(JOB) [5-8]
+  TargetName [9-12]
+    PathExpression [9-12]
+      Identifier(abc) [9-12]
+--
+STOP JOB abc
+==
