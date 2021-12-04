@@ -39,7 +39,6 @@ bazel build "$TARGET" "$BUILD_ARGV"
 bazel test "$TARGET" "$BUILD_ARGV"
 
 # explicitly build dependencies into static library
-bazel clean
 bazel query "deps(//zetasql/parser:parser)" | grep //zetasql | xargs bazel build "$BUILD_ARGV"
 bazel build "@com_googleapis_googleapis//:all" "$BUILD_ARGV"
 bazel query "@com_google_file_based_test_driver//..." | xargs bazel build "$BUILD_ARGV"

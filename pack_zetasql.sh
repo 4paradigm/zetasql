@@ -51,6 +51,8 @@ export ROOT
 export ZETASQL_LIB_NAME="libzetasql-$VERSION"
 export PREFIX="$ROOT/${ZETASQL_LIB_NAME}"
 
+# different module of zetasql build different library, we first find all need libraries and copy
+# them into tmp-lib(this don't include thirdparty libraries), then repack into single archive
 rm -rf tmp-lib libzetasql.mri "${PREFIX}"
 mkdir -p tmp-lib
 mkdir -p "${PREFIX}"

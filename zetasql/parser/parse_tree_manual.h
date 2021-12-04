@@ -5438,7 +5438,7 @@ class ASTDeleteStatement final : public ASTStatement {
   }
 
   const ASTGeneralizedPathExpression* target_path_ = nullptr;    // Required
-  const ASTTargetName* opt_target_name_ = nullptr;                    // Optional
+  const ASTTargetName* opt_target_name_ = nullptr;               // Optional
   const ASTAlias* alias_ = nullptr;                              // Optional
   const ASTWithOffset* offset_ = nullptr;                        // Optional
   const ASTExpression* where_ = nullptr;                         // Optional
