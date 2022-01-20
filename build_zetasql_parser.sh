@@ -28,10 +28,9 @@ if grep -q centos /etc/os-release ; then
 fi
 
 if [[ $(arch) = 'aarch64' ]]; then
-    if git apply --check aarch64.patch ; then
-        # need upgrade abseil and bazel to compile on aarch64
-        git apply aarch64.patch
-    fi
+    git checkout .
+    # need upgrade abseil and bazel to compile on aarch64
+    git apply --verbose aarch64.patch
 fi
 
 TARGET='//zetasql/parser/...'
