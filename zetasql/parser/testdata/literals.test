@@ -60,6 +60,20 @@ SELECT
   1d
 ==
 
+select 100ss
+--
+ERROR: Syntax error: Missing whitespace between literal and alias [at 1:12]
+select 100ss
+           ^
+==
+
+select 100DD
+--
+ERROR: Syntax error: Missing whitespace between literal and alias [at 1:12]
+select 100DD
+           ^
+==
+
 select 1e10, .1e10, 0.1e10, 1.e10, 1e+10, .1e-10, 0.1e+10, 1.e-10;
 --
 QueryStatement [0-65]

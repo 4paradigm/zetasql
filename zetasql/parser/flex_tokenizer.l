@@ -727,6 +727,12 @@ zone { return BisonParserImpl::token::KW_ZONE; }
 {decimal_digits}[SMHD] {
   return BisonParserImpl::token::INTERVAL_LITERAL;
 }
+{decimal_digits}[SMHD][A-Z_] {
+  yylloc->begin.column += YYLeng() - 1;
+  SetOverrideError(
+      *yylloc, "Syntax error: Missing whitespace between literal and alias");
+  yyterminate();
+}
  /* Error rules for a number followed by an identifier without white space in
     between. We don't want to parse the identifier as accidental alias. For
     instance, 123abc should be error, and we don't want it to be parsed as
