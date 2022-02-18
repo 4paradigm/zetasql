@@ -884,6 +884,11 @@ void Unparser::visitASTDeployStatement(const ASTDeployStatement *node, void *dat
     print("IF NOT EXISTS");
   }
   node->name()->Accept(this, data);
+
+  if (node->options_list() != nullptr) {
+    print("OPTIONS");
+    node->options_list()->Accept(this, data);
+  }
   node->stmt()->Accept(this, data);
 }
 

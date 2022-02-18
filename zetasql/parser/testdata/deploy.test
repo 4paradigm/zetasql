@@ -14,6 +14,27 @@ SELECT
   1
 ==
 
+DEPLOY IF NOT EXISTS data_service_1 OPTIONS(long_windows="w1:100,w2:100s") SELECT 1;
+--
+DeployStatement [0-83]
+  Identifier(data_service_1) [21-35]
+  OptionsList [43-74]
+    OptionsEntry [44-73]
+      Identifier(long_windows) [44-56]
+      StringLiteral("w1:100,w2:100s") [57-73]
+  QueryStatement [75-83]
+    Query [75-83]
+      Select [75-83]
+        SelectList [82-83]
+          SelectColumn [82-83]
+            IntLiteral(1) [82-83]
+--
+DEPLOY IF NOT EXISTS data_service_1 OPTIONS(long_windows = "w1:100,w2:100s")
+SELECT
+  1
+==
+
+
 DEPLOY deploy create table t1 (a int32, b string);
 --
 DeployStatement [0-49]

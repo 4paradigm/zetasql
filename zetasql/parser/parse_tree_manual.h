@@ -655,6 +655,7 @@ class ASTDeployStatement final : public ASTStatement {
 
   const ASTIdentifier* name() const { return name_; }
   const ASTStatement* stmt() const { return stmt_; }
+  const ASTOptionsList* options_list() const { return options_list_; }
 
   bool is_if_not_exists() const { return is_if_not_exists_; }
   void set_is_if_not_exists(bool value) { is_if_not_exists_ = value; }
@@ -663,11 +664,13 @@ class ASTDeployStatement final : public ASTStatement {
   void InitFields() final {
     FieldLoader fl(this);
     fl.AddRequired(&name_);
+    fl.AddOptional(&options_list_, AST_OPTIONS_LIST);
     fl.AddRequired(&stmt_);
   }
   const ASTIdentifier* name_ = nullptr;
   const ASTStatement* stmt_ = nullptr;
   bool is_if_not_exists_ = false;
+  const ASTOptionsList* options_list_ = nullptr;
 };
 
 class ASTStopStatement final : public ASTStatement {
