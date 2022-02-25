@@ -14,7 +14,7 @@ function usage ()
 
     Options:
     -h       Display this message
-    -d       Linux distribution name, e.g centos, ubuntu
+    -d       Linux distribution name, e.g centos, ubuntu, default empty
     -i       Request install to given directory after pack"
 
 }    # ----------  end of function usage  ----------
