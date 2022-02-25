@@ -243,6 +243,23 @@ ShowStatement [0-32]
 SHOW DEPLOYMENT deploy_service_1
 ==
 
+SHOW COMPONENTS;
+--
+ShowStatement [0-15]
+  Identifier(COMPONENTS) [5-15]
+--
+SHOW COMPONENTS
+==
+
+
+SHOW TABLE STATUS;
+--
+ShowStatement [0-17]
+  Identifier(`TABLE STATUS`) [5-17]
+--
+SHOW `TABLE STATUS`
+==
+
 SHOW `MATERIALIZED VIEWS`;
 --
 ShowStatement [0-25]

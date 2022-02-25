@@ -3579,6 +3579,10 @@ show_target:
     {
       $$ = parser->MakeIdentifier(@$, "SESSION VARIABLES");
     }
+  | "TABLE" "STATUS"
+    {
+      $$ = parser->MakeIdentifier(@$, "TABLE STATUS");
+    }
   | identifier
     {
       $$ = $1;
