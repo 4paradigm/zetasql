@@ -1980,6 +1980,18 @@ set_statement:
     {
       $$ = MAKE_NODE(ASTSystemVariableAssignment, @$, {$2, $4});
     }
+    | "SET" "GLOBAL" identifier "=" expression
+    {
+      auto* stmt = MAKE_NODE(ASTScopedVariableAssignment, @$, {$3, $5});
+      stmt->set_scope(zetasql::ASTScopedVariableAssignment::Scope::GLOBAL);
+      $$ = stmt;
+    }
+    | "SET" "SESSION" identifier "=" expression
+    {
+      auto* stmt = MAKE_NODE(ASTScopedVariableAssignment, @$, {$3, $5});
+      stmt->set_scope(zetasql::ASTScopedVariableAssignment::Scope::SESSION);
+      $$ = stmt;
+    }
     | "SET" "(" identifier_list ")" "=" expression
     {
       $$ = MAKE_NODE(ASTAssignmentFromStruct, @$, {$3, $6});
@@ -8895,6 +8907,10 @@ next_statement_kind_without_hint:
       { $$ = zetasql::ASTParameterAssignment::kConcreteNodeKind; }
     | "SET" system_variable_expression "="
       { $$ = zetasql::ASTSystemVariableAssignment::kConcreteNodeKind; }
+    | "SET" "GLOBAL" identifier "="
+      { $$ = zetasql::ASTScopedVariableAssignment::kConcreteNodeKind; }
+    | "SET" "SESSION" identifier "="
+      { $$ = zetasql::ASTScopedVariableAssignment::kConcreteNodeKind; }
     | "SET" "("
       { $$ = zetasql::ASTAssignmentFromStruct::kConcreteNodeKind; }
     | "COMMIT" { $$ = zetasql::ASTCommitStatement::kConcreteNodeKind; }

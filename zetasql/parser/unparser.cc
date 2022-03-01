@@ -3254,6 +3254,24 @@ void Unparser::visitASTSystemVariableAssignment(
   node->expression()->Accept(this, data);
 }
 
+void Unparser::visitASTScopedVariableAssignment(
+    const ASTScopedVariableAssignment *node, void *data) {
+  print("SET");
+  switch (node->scope()) {
+    case ASTScopedVariableAssignment::Scope::SESSION: {
+      print("SESSION");
+      break;
+    }
+    case ASTScopedVariableAssignment::Scope::GLOBAL: {
+      print("GLOBAL");
+      break;
+    }
+  }
+  node->variable()->Accept(this, data);
+  print("=");
+  node->expression()->Accept(this, data);
+}
+
 void Unparser::visitASTAssignmentFromStruct(const ASTAssignmentFromStruct* node,
                                   void* data) {
   print("SET");

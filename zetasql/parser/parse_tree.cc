@@ -359,6 +359,7 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_CONFIG_CLAUSE] = "ConfigClause";
   map[AST_WITH_WEIGHT] = "WithWeight";
   map[AST_WITH_PARTITION_COLUMNS_CLAUSE] = "WithPartitionColumnsClause";
+  map[AST_SCOPED_VARIABLE_ASSIGNMENT] = "ScopedVariableAssignment";
   for (int kind = kFirstASTNodeKind; kind <= kLastASTNodeKind;
        ++kind) {
     ZETASQL_DCHECK(zetasql_base::ContainsKey(map, static_cast<ASTNodeKind>(kind)))

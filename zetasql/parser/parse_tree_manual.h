@@ -8167,6 +8167,44 @@ class ASTSystemVariableAssignment final : public ASTStatement {
   const ASTExpression* expression_ = nullptr;
 };
 
+// Yet another variable assignment statement
+// has the same meaning with ASTSystemVariableAssignment but in different syntax
+// e.g. SET GLOBAL xxx = 'on' is equivalent with SET @@global.xxx = 'on'
+//      SET SESSION xxx = 'off' is equivalent with SET @@session.xxx = 'off'
+class ASTScopedVariableAssignment final : public ASTStatement {
+ public:
+  enum Scope {
+    SESSION,
+    GLOBAL,
+  };
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_SCOPED_VARIABLE_ASSIGNMENT;
+
+  ASTScopedVariableAssignment() : ASTStatement(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const ASTIdentifier* variable() const {
+    return variable_;
+  }
+  const ASTExpression* expression() const { return expression_; }
+
+  Scope scope() const { return scope_; }
+  void set_scope(Scope scope) { scope_ = scope; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&variable_);
+    fl.AddRequired(&expression_);
+  }
+
+  const ASTIdentifier* variable_ = nullptr;
+  const ASTExpression* expression_ = nullptr;
+  Scope scope_ = SESSION;
+};
+
 // A statement which assigns multiple variables to fields in a struct,
 // which each variable assigned to one field.
 // Example:

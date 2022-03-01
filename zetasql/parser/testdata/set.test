@@ -430,6 +430,29 @@ SET @@VAL = (
 )
 ==
 
+
+# ScopedVariableAssignment
+
+SET {{SESSION|GLOBAL}} xxx = 'on'
+--
+ALTERNATION GROUP: SESSION
+--
+ScopedVariableAssignment [0-22]
+  Identifier(xxx) [12-15]
+  StringLiteral('on') [18-22]
+--
+SET SESSION xxx = 'on'
+--
+ALTERNATION GROUP: GLOBAL
+--
+ScopedVariableAssignment [0-21]
+  Identifier(xxx) [11-14]
+  StringLiteral('on') [17-21]
+--
+SET GLOBAL xxx = 'on'
+==
+
+
 # Error cases
 
 # Does not work for setting a parameter to an invalid expression.

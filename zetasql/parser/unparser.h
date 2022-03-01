@@ -598,6 +598,8 @@ class Unparser : public ParseTreeVisitor {
                                    void* data) override;
   void visitASTSystemVariableAssignment(const ASTSystemVariableAssignment* node,
                                         void* data) override;
+  void visitASTScopedVariableAssignment(const ASTScopedVariableAssignment* node,
+                                        void* data) override;
   void visitASTSingleAssignment(const ASTSingleAssignment* node,
                                 void* data) override;
 
