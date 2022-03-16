@@ -1,6 +1,6 @@
 DEPLOY IF NOT EXISTS data_service_1 SELECT 1;
 --
-DeployStatement [0-44]
+DeployStatement(is_if_not_exists) [0-44]
   Identifier(data_service_1) [21-35]
   QueryStatement [36-44]
     Query [36-44]
@@ -16,7 +16,7 @@ SELECT
 
 DEPLOY IF NOT EXISTS data_service_1 OPTIONS(long_windows="w1:100,w2:100s") SELECT 1;
 --
-DeployStatement [0-83]
+DeployStatement(is_if_not_exists) [0-83]
   Identifier(data_service_1) [21-35]
   OptionsList [43-74]
     OptionsEntry [44-73]

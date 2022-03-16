@@ -650,6 +650,7 @@ class ASTDeployStatement final : public ASTStatement {
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
+  std::string SingleNodeDebugString() const override;
 
   std::string UnparseStmt() const;
 
