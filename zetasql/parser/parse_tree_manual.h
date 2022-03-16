@@ -4270,9 +4270,13 @@ class ASTCreateDatabaseStatement final : public ASTStatement {
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
+  std::string SingleNodeDebugString() const override;
 
   const ASTPathExpression* name() const { return name_; }
   const ASTOptionsList* options_list() const { return options_list_; }
+
+  bool is_if_not_exists() const { return is_if_not_exists_; }
+  void set_is_if_not_exists(bool value) { is_if_not_exists_ = value; }
 
  private:
   void InitFields() final {
@@ -4283,6 +4287,7 @@ class ASTCreateDatabaseStatement final : public ASTStatement {
 
   const ASTPathExpression* name_ = nullptr;
   const ASTOptionsList* options_list_ = nullptr;
+  bool is_if_not_exists_ = false;
 };
 
 // This is the common superclass of CREATE FUNCTION and CREATE TABLE FUNCTION

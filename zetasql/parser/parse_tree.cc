@@ -1143,6 +1143,11 @@ bool ASTFunctionDeclaration::IsTemplated() const {
   return false;
 }
 
+std::string ASTCreateDatabaseStatement::SingleNodeDebugString() const {
+  return absl::StrCat(ASTNode::SingleNodeDebugString(),
+                      is_if_not_exists() ? "(is_if_not_exists)" : "");
+}
+
 std::string ASTCreateFunctionStmtBase::SingleNodeDebugString() const {
   return ASTCreateStatement::SingleNodeDebugString();
 }

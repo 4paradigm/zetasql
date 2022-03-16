@@ -419,6 +419,9 @@ void Unparser::visitASTCreateConstantStatement(
 void Unparser::visitASTCreateDatabaseStatement(
     const ASTCreateDatabaseStatement* node, void* data) {
   print("CREATE DATABASE");
+  if (node->is_if_not_exists()) {
+    print("IF NOT EXISTS");
+  }
   node->name()->Accept(this, data);
   if (node->options_list() != nullptr) {
     print("OPTIONS");

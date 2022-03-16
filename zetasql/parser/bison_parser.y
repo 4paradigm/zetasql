@@ -2060,9 +2060,11 @@ create_constant_statement:
     ;
 
 create_database_statement:
-    "CREATE" "DATABASE" path_expression opt_options_list
+    "CREATE" "DATABASE" opt_if_not_exists path_expression opt_options_list
       {
-        $$ = MAKE_NODE(ASTCreateDatabaseStatement, @$, {$3, $4});
+        auto* create = MAKE_NODE(ASTCreateDatabaseStatement, @$, {$4, $5});
+        create->set_is_if_not_exists($3);
+        $$ = create;
       }
     ;
 
