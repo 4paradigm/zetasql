@@ -2217,13 +2217,28 @@ void Unparser::visitASTWindowDefinition(
 void Unparser::visitASTWindowSpecification(
     const ASTWindowSpecification* node, void* data) {
   UnparseChildrenWithSeparator(node, data, "");
-  if (node->is_exclude_current_time()) {
-    print("EXCLUDE CURRENT_TIME");
-  }
 
   if (node->is_instance_not_in_window()) {
     print("INSTANCE_NOT_IN_WINDOW");
   }
+}
+
+void Unparser::visitASTWindowAttributeList(
+    const ASTWindowAttributeList *node, void *data) {
+  UnparseChildrenWithSeparator(node, data, "", /*break_line=*/false);
+}
+void Unparser::visitASTWindowAttributeExcludeCurrentTime(
+    const ASTWindowAttributeExcludeCurrentTime *node, void *data) {
+  print("EXCLUDE CURRENT_TIME");
+}
+void Unparser::visitASTWindowAttributeExcludeCurrentRow(
+    const ASTWindowAttributeExcludeCurrentRow *node, void *data) {
+  print("EXCLUDE CURRENT_ROW");
+}
+
+void Unparser::visitASTWindowAttributeInstNotInWindow(
+    const ASTWindowAttributeInstNotInWindow *node, void *data) {
+  print("INSTANCE_NOT_IN_WINDOW");
 }
 
 void Unparser::visitASTPartitionBy(const ASTPartitionBy* node, void* data) {

@@ -404,6 +404,7 @@ cross { return BisonParserImpl::token::KW_CROSS; }
 cube { return BisonParserImpl::token::KW_CUBE; }
 current { return BisonParserImpl::token::KW_CURRENT; }
 current_time { return BisonParserImpl::token::KW_CURRENT_TIME;}
+current_row { return BisonParserImpl::token::KW_CURRENT_ROW; }
 data { return BisonParserImpl::token::KW_DATA; }
 database { return BisonParserImpl::token::KW_DATABASE; }
 date { return BisonParserImpl::token::KW_DATE; }

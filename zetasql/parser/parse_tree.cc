@@ -360,6 +360,10 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_WITH_WEIGHT] = "WithWeight";
   map[AST_WITH_PARTITION_COLUMNS_CLAUSE] = "WithPartitionColumnsClause";
   map[AST_SCOPED_VARIABLE_ASSIGNMENT] = "ScopedVariableAssignment";
+  map[AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_TIME] = "WindowAttributeExcludeCurrentTime";
+  map[AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_ROW] = "WindowAttributeExcludeCurrentRow";
+  map[AST_WINDOW_ATTRIBUTE_INST_NOT_IN_WINDOW] = "WindowAttributeInstNotInWindow";
+  map[AST_WINDOW_ATTRIBUTE_LIST] = "WindowAttributeList";
   for (int kind = kFirstASTNodeKind; kind <= kLastASTNodeKind;
        ++kind) {
     ZETASQL_DCHECK(zetasql_base::ContainsKey(map, static_cast<ASTNodeKind>(kind)))
@@ -933,20 +937,17 @@ std::string ASTWindowFrame::SingleNodeDebugString() const {
   return absl::StrCat(ASTNode::SingleNodeDebugString(), "(",
                       GetFrameUnitString(), ")");
 }
-std::string ASTWindowSpecification::SingleNodeDebugString() const {
-  if (is_instance_not_in_window_ && is_exclude_current_time_) {
-    return absl::StrCat(ASTNode::SingleNodeDebugString(), 
-    "(is_exclude_current_time, is_instance_not_in_window)");
-  }
-  if (is_instance_not_in_window_) {
-    return absl::StrCat(ASTNode::SingleNodeDebugString(), 
-    "(is_instance_not_in_window)");
-  }
-  if (is_exclude_current_time_) {
-    return absl::StrCat(ASTNode::SingleNodeDebugString(), 
-    "(is_exclude_current_time)");
-  }
-  return ASTNode::SingleNodeDebugString();
+
+std::string ASTWindowAttributeExcludeCurrentTime::SingleNodeSqlString() const {
+  return "EXCLUDE CURRENT_TIME";
+}
+
+std::string ASTWindowAttributeExcludeCurrentRow::SingleNodeSqlString() const {
+  return "EXCLUDE CURRENT_ROW";
+}
+
+std::string ASTWindowAttributeInstNotInWindow::SingleNodeSqlString() const {
+  return "INSTANCE_NOT_IN_WINDOW";
 }
 
 // static

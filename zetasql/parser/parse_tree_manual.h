@@ -3029,6 +3029,88 @@ class ASTWindowFrame final : public ASTNode {
   const ASTMaxSize* max_size_ = nullptr;
 };
 
+class ASTWindowAttribute : public ASTNode {
+ public:
+  explicit ASTWindowAttribute(ASTNodeKind kind) : ASTNode(kind) {}
+  virtual std::string SingleNodeSqlString() const = 0;
+};
+
+class ASTWindowAttributeExcludeCurrentTime final : public ASTWindowAttribute {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_TIME;
+
+  ASTWindowAttributeExcludeCurrentTime() : ASTWindowAttribute(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  std::string SingleNodeSqlString() const override;
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+  }
+};
+
+class ASTWindowAttributeExcludeCurrentRow final : public ASTWindowAttribute {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_ROW;
+
+  ASTWindowAttributeExcludeCurrentRow() : ASTWindowAttribute(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  std::string SingleNodeSqlString() const override;
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+  }
+};
+
+class ASTWindowAttributeInstNotInWindow final : public ASTWindowAttribute {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_WINDOW_ATTRIBUTE_INST_NOT_IN_WINDOW;
+
+  ASTWindowAttributeInstNotInWindow() : ASTWindowAttribute(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  std::string SingleNodeSqlString() const override;
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+  }
+};
+
+class ASTWindowAttributeList final : public ASTNode {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_WINDOW_ATTRIBUTE_LIST;
+
+  ASTWindowAttributeList() : ASTNode(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const absl::Span<const ASTWindowAttribute* const>& attributes() const {
+    return attrs_;
+  }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRestAsRepeated(&attrs_);
+  }
+
+  absl::Span<const ASTWindowAttribute* const> attrs_;
+};
 
 class ASTWindowSpecification final : public ASTNode {
  public:
@@ -3046,13 +3128,18 @@ class ASTWindowSpecification final : public ASTNode {
   const ASTWindowFrame* window_frame() const { return window_frame_; }
 
   const ASTIdentifier* base_window_name() const { return base_window_name_; }
-  
-  bool is_instance_not_in_window() const { return is_instance_not_in_window_; }
-  void set_is_instance_not_in_window(bool value) { is_instance_not_in_window_ = value; }
 
-  bool is_exclude_current_time() const { return is_exclude_current_time_; }
-  void set_is_exclude_current_time(bool value) { is_exclude_current_time_ = value; }
-  std::string SingleNodeDebugString() const override;
+  bool is_instance_not_in_window() const {
+    return -1 != find_child_index(AST_WINDOW_ATTRIBUTE_INST_NOT_IN_WINDOW);
+  }
+
+  bool is_exclude_current_time() const {
+    return -1 != find_child_index(AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_TIME);
+  }
+  bool is_exclude_current_row() const {
+    return -1 != find_child_index(AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_ROW);
+  }
+
  private:
   void InitFields() final {
     FieldLoader fl(this);
@@ -3061,7 +3148,9 @@ class ASTWindowSpecification final : public ASTNode {
     fl.AddOptional(&partition_by_, AST_PARTITION_BY);
     fl.AddOptional(&order_by_, AST_ORDER_BY);
     fl.AddOptional(&window_frame_, AST_WINDOW_FRAME);
+    fl.AddOptional(&exclude_prop_list_, AST_WINDOW_ATTRIBUTE_LIST);
   }
+
 
   // All are optional, can be NULL.
   const ASTIdentifier* base_window_name_ = nullptr;
@@ -3069,9 +3158,11 @@ class ASTWindowSpecification final : public ASTNode {
   const ASTPartitionBy* partition_by_ = nullptr;
   const ASTOrderBy* order_by_ = nullptr;
   const ASTWindowFrame* window_frame_ = nullptr;
-
-  bool is_instance_not_in_window_ = false;
-  bool is_exclude_current_time_ = false;
+  // extra properities to the window
+  // - EXCLUDE CURRENT_TIME
+  // - EXCLUDE CURRENT_ROW
+  // - INSTANCE_NOT_IN_WINDOW
+  const ASTWindowAttributeList* exclude_prop_list_ = nullptr;
 };
 
 class ASTWindowDefinition final : public ASTNode {

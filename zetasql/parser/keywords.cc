@@ -97,6 +97,7 @@ constexpr KeywordInfoPOD kAllKeywords[] = {
     {"cube", KW_CUBE, KeywordInfo::kReserved},
     {"current", KW_CURRENT, KeywordInfo::kReserved},
     {"current_time", KW_CURRENT_TIME},
+    {"current_row", KW_CURRENT_ROW},
     {"data", KW_DATA},
     {"database", KW_DATABASE},
     {"date", KW_DATE},

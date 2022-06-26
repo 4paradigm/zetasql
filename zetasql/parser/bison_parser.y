@@ -144,7 +144,7 @@ class DashedIdentifierTmpNode final : public zetasql::ASTNode {
 
 // Bison doesn't support nested namespaces for this, so we can't use
 // zetasql::parser.
-%name-prefix "zetasql_bison_parser"
+%define api.prefix {zetasql_bison_parser}
 
 // Parameters for the parser. The tokenizer gets passed through into the lexer
 // as well, so it is declared with "%lex-param" too.
@@ -812,6 +812,7 @@ using zetasql::ASTDropStatement;
 %token KW_CONSTANT "CONSTANT"
 %token KW_CONSTRAINT "CONSTRAINT"
 %token KW_CURRENT_TIME "CURRENT_TIME"
+%token KW_CURRENT_ROW "CURRENT_ROW"
 %token KW_DATA "DATA"
 %token KW_DATABASE "DATABASE"
 %token KW_DATE "DATE"
@@ -1408,8 +1409,9 @@ using zetasql::ASTDropStatement;
 %type <boolean> opt_unique
 %type <boolean> opt_search
 %type <boolean> opt_const
-%type <boolean> opt_instance_not_in_window
-%type <boolean> opt_exclude_current_time
+%type <node> opt_window_attr_list
+%type <node> window_attr_list
+%type <node> window_attr
 %type <node> opt_with_anonymization
 %type <node> primary_key_column_attribute
 %type <node> hidden_column_attribute
@@ -6886,19 +6888,43 @@ opt_maxsize:
     }
   | /* Nothing */ { $$ = nullptr; }
   ;
-opt_instance_not_in_window:
-  "INSTANCE_NOT_IN_WINDOW"
+
+// extra attributes to window
+// - EXCLUDE CURRENT_TIME
+// - EXCLUDE CURRENT_ROW
+// - INSTANCE_NOT_IN_WINDOW
+opt_window_attr_list:
+  window_attr_list
     {
-      $$ = true;
-    };
-  | /* Nothing */ { $$ = false; }
+      $$ = $1;
+    }
+  | /* Nothing */ { $$ = nullptr; }
   ;
-opt_exclude_current_time:
+
+window_attr_list:
+  window_attr
+    {
+      $$ = MAKE_NODE(ASTWindowAttributeList, @$, {$1});
+    }
+  | window_attr_list window_attr
+    {
+        $$ = WithEndLocation(WithExtraChildren($1, {$2}), @$);
+    }
+  ;
+
+window_attr:
   "EXCLUDE" "CURRENT_TIME"
     {
-      $$ = true;
-    };
-  | /* Nothing */ { $$ = false; }
+      $$ = MAKE_NODE(ASTWindowAttributeExcludeCurrentTime, @$, {});
+    }
+  | "EXCLUDE" "CURRENT_ROW"
+    {
+      $$ = MAKE_NODE(ASTWindowAttributeExcludeCurrentRow, @$, {});
+    }
+  | "INSTANCE_NOT_IN_WINDOW"
+    {
+      $$ = MAKE_NODE(ASTWindowAttributeInstNotInWindow, @$, {});
+    }
   ;
 
 window_specification:
@@ -6907,11 +6933,9 @@ window_specification:
         $$ = MAKE_NODE(ASTWindowSpecification, @$, {$1});
       }
     | "(" opt_identifier opt_union_table_reference_list opt_partition_by_clause opt_order_by_clause
-          opt_window_frame_clause opt_exclude_current_time opt_instance_not_in_window ")"
+          opt_window_frame_clause opt_window_attr_list ")"
       {
-        auto *window_spec = MAKE_NODE(ASTWindowSpecification, @$, {$2, $3, $4, $5, $6});
-        window_spec->set_is_exclude_current_time($7);
-        window_spec->set_is_instance_not_in_window($8);
+        auto *window_spec = MAKE_NODE(ASTWindowSpecification, @$, {$2, $3, $4, $5, $6, $7});
         $$ = window_spec;
       }
    ;
@@ -7400,6 +7424,7 @@ keyword_as_identifier:
     | "CONSTRAINT"
     | "CONTINUE"
     | "CURRENT_TIME"
+    | "CURRENT_ROW"
     | "DATA"
     | "DATABASE"
     | "DATE"

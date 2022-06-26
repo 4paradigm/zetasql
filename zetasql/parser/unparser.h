@@ -308,7 +308,7 @@ class Unparser : public ParseTreeVisitor {
                                  void* data) override;
   void visitASTNewConstructor(const ASTNewConstructor* node,
                               void* data) override;
-  void visitASTIndexDefinition(const ASTIndexDefinition* node, 
+  void visitASTIndexDefinition(const ASTIndexDefinition* node,
                                 void* data) override;
   void visitASTInferredTypeColumnSchema(const ASTInferredTypeColumnSchema* node,
                                         void* data) override;
@@ -428,6 +428,14 @@ class Unparser : public ParseTreeVisitor {
                                 void* data) override;
   void visitASTWindowSpecification(const ASTWindowSpecification* node,
                                    void* data) override;
+  void visitASTWindowAttributeList(const ASTWindowAttributeList *node,
+                              void *data) override;
+  void visitASTWindowAttributeExcludeCurrentTime(
+      const ASTWindowAttributeExcludeCurrentTime *node, void *data) override;
+  void visitASTWindowAttributeExcludeCurrentRow(
+      const ASTWindowAttributeExcludeCurrentRow *node, void *data) override;
+  void visitASTWindowAttributeInstNotInWindow(
+      const ASTWindowAttributeInstNotInWindow *node, void *data) override;
   void visitASTPartitionBy(const ASTPartitionBy* node, void* data) override;
   void visitASTClusterBy(const ASTClusterBy* node, void* data) override;
   void visitASTCloneDataSource(const ASTCloneDataSource* node,
@@ -440,7 +448,7 @@ class Unparser : public ParseTreeVisitor {
   void visitASTWindowFrameExpr(const ASTWindowFrameExpr* node,
                                void* data) override;
   void visitASTMaxSize(const ASTMaxSize* node, void* data) override;
-                                                              
+
   void visitASTDefaultLiteral(const ASTDefaultLiteral* node,
                               void* data) override;
   void visitASTAnalyzeStatement(const ASTAnalyzeStatement* node,
