@@ -30,8 +30,6 @@ jobs:
       build_argv: '--features=-supports_dynamic_linker '
     steps:
       - uses: actions/checkout@v2
-        with:
-          set-safe-directory: ${{ github.workspace }}
 
       - name: Setup Bazel
         run: |
@@ -80,8 +78,6 @@ jobs:
           update-alternatives --install /usr/bin/python python /usr/bin/python3 100
 
       - uses: actions/checkout@v3
-        with:
-          set-safe-directory: ${{ github.workspace }}
 
       - uses: actions/setup-java@v2
         with:
