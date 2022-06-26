@@ -102,6 +102,7 @@ jobs:
 
       - name: pack libzetasql
         run: |
+          git config --global --add safe.directory "$(pwd)"
           ./pack_zetasql.sh -d ubuntu
         env:
           TAG: ${{ env.TAG }}
