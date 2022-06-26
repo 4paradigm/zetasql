@@ -745,6 +745,40 @@ FROM
   T
 ==
 
+# arbitrary order for window attributes should be fine
+select f() over (rows_range between 5s preceding and current row maxsize 5 exclude current_row instance_not_in_window exclude current_time) from T
+--
+QueryStatement [0-146]
+  Query [0-146]
+    Select [0-146]
+      SelectList [7-139]
+        SelectColumn [7-139]
+          AnalyticFunctionCall [7-139]
+            FunctionCall [7-10]
+              PathExpression [7-8]
+                Identifier(f) [7-8]
+            WindowSpecification [16-139]
+              WindowFrame(ROWS_RANGE) [17-74]
+                WindowFrameExpr(OFFSET PRECEDING) [36-48]
+                  IntervalLiteral(5s) [36-38]
+                WindowFrameExpr(CURRENT ROW) [53-64]
+                MaxSize [65-74]
+                  IntLiteral(5) [73-74]
+              WindowAttributeList [75-138]
+                WindowAttributeExcludeCurrentRow [75-94]
+                WindowAttributeInstNotInWindow [95-117]
+                WindowAttributeExcludeCurrentTime [118-138]
+      FromClause [140-146]
+        TablePathExpression [145-146]
+          PathExpression [145-146]
+            Identifier(T) [145-146]
+--
+SELECT
+  f() OVER (ROWS_RANGE BETWEEN 5s PRECEDING AND CURRENT ROW MAXSIZE 5 EXCLUDE CURRENT_ROW INSTANCE_NOT_IN_WINDOW EXCLUDE CURRENT_TIME)
+FROM
+  T
+==
+
 # window with instance_not_in_window 
 select f() over (rows_range between 5s preceding and current row maxsize 5 instance_not_in_window)
 from T
