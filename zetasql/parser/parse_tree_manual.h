@@ -3100,16 +3100,16 @@ class ASTWindowAttributeList final : public ASTNode {
       NonRecursiveParseTreeVisitor* visitor) const override;
 
   const absl::Span<const ASTWindowAttribute* const>& attributes() const {
-    return attrs_;
+    return attributes_;
   }
 
  private:
   void InitFields() final {
     FieldLoader fl(this);
-    fl.AddRestAsRepeated(&attrs_);
+    fl.AddRestAsRepeated(&attributes_);
   }
 
-  absl::Span<const ASTWindowAttribute* const> attrs_;
+  absl::Span<const ASTWindowAttribute* const> attributes_;
 };
 
 class ASTWindowSpecification final : public ASTNode {
@@ -3130,14 +3130,20 @@ class ASTWindowSpecification final : public ASTNode {
   const ASTIdentifier* base_window_name() const { return base_window_name_; }
 
   bool is_instance_not_in_window() const {
-    return -1 != find_child_index(AST_WINDOW_ATTRIBUTE_INST_NOT_IN_WINDOW);
+    return nullptr != attr_list_ &&
+           -1 != attr_list_->find_child_index(
+                     AST_WINDOW_ATTRIBUTE_INST_NOT_IN_WINDOW);
   }
 
   bool is_exclude_current_time() const {
-    return -1 != find_child_index(AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_TIME);
+    return nullptr != attr_list_ &&
+           -1 != attr_list_->find_child_index(
+                     AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_TIME);
   }
   bool is_exclude_current_row() const {
-    return -1 != find_child_index(AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_ROW);
+    return nullptr != attr_list_ &&
+           -1 != attr_list_->find_child_index(
+                     AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_ROW);
   }
 
  private:
@@ -3148,7 +3154,7 @@ class ASTWindowSpecification final : public ASTNode {
     fl.AddOptional(&partition_by_, AST_PARTITION_BY);
     fl.AddOptional(&order_by_, AST_ORDER_BY);
     fl.AddOptional(&window_frame_, AST_WINDOW_FRAME);
-    fl.AddOptional(&exclude_prop_list_, AST_WINDOW_ATTRIBUTE_LIST);
+    fl.AddOptional(&attr_list_, AST_WINDOW_ATTRIBUTE_LIST);
   }
 
 
@@ -3162,7 +3168,7 @@ class ASTWindowSpecification final : public ASTNode {
   // - EXCLUDE CURRENT_TIME
   // - EXCLUDE CURRENT_ROW
   // - INSTANCE_NOT_IN_WINDOW
-  const ASTWindowAttributeList* exclude_prop_list_ = nullptr;
+  const ASTWindowAttributeList* attr_list_ = nullptr;
 };
 
 class ASTWindowDefinition final : public ASTNode {

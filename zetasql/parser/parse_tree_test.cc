@@ -180,6 +180,34 @@ TEST(ParseTreeTest, NodeKindCategories_IfStatement) {
   EXPECT_FALSE(statement->IsTableExpression());
 }
 
+TEST(ParseTreeTest, WindowSpecificationAttrs) {
+  const std::string sql =
+      R"s(select f() over (rows_range between 5s preceding and current row maxsize 5 exclude current_row instance_not_in_window) from T)s";
+
+  std::unique_ptr<ParserOutput> parser_output;
+  ZETASQL_ASSERT_OK(ParseScript(sql, ParserOptions(),
+                                ERROR_MESSAGE_WITH_PAYLOAD, &parser_output));
+  auto statement_list = parser_output->script()->statement_list();
+  ASSERT_EQ(statement_list.size(), 1);
+  const ASTStatement *stmt = statement_list[0];
+
+  auto select_column = stmt->GetAsOrDie<ASTQueryStatement>()
+                           ->query()
+                           ->query_expr()
+                           ->GetAsOrDie<ASTSelect>()
+                           ->select_list()
+                           ->GetAsOrDie<ASTSelectList>()
+                           ->columns();
+  ASSERT_EQ(select_column.size(), 1);
+  auto col1 = select_column[0];
+  auto win_spec =
+      col1->expression()->GetAsOrDie<ASTAnalyticFunctionCall>()->window_spec();
+  ASSERT_TRUE(win_spec != nullptr);
+  EXPECT_EQ(win_spec->is_exclude_current_time(), false);
+  EXPECT_EQ(win_spec->is_exclude_current_row(), true);
+  EXPECT_EQ(win_spec->is_instance_not_in_window(), true);
+}
+
 TEST(ParseTreeTest, NodeKindCategories_DdlStatement_IsCreateStatement) {
   const std::string sql = "create table t as select 1 x";
 
