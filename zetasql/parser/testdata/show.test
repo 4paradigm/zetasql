@@ -126,6 +126,16 @@ ShowStatement [0-9]
 SHOW JOBS
 ==
 
+show JOBLOG 19;
+--
+ShowStatement [0-14]
+  Identifier(JOBLOG) [5-11]
+  TargetName [12-14]
+    IntLiteral(19) [12-14]
+--
+SHOW JOBLOG 19
+==
+
 show VARIABLES;
 --
 ShowStatement [0-14]

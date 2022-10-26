@@ -178,6 +178,7 @@ constexpr KeywordInfoPOD kAllKeywords[] = {
     {"is", KW_IS, KeywordInfo::kReserved},
     {"isolation", KW_ISOLATION},
     {"job", KW_JOB},
+    {"joblog", KW_JOBLOG},
     {"join", KW_JOIN, KeywordInfo::kReserved},
     {"json", KW_JSON},
     {"key", KW_KEY},

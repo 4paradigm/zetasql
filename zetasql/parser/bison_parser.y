@@ -858,6 +858,7 @@ using zetasql::ASTDropStatement;
 %token KW_ITERATE "ITERATE"
 %token KW_ISOLATION "ISOLATION"
 %token KW_JOB "JOB"
+%token KW_JOBLOG "JOBLOG"
 %token KW_JSON "JSON"
 %token KW_KEY "KEY"
 %token KW_LANGUAGE "LANGUAGE"
@@ -3619,6 +3620,10 @@ show_with_name_target:
   | "JOB"
     {
       $$ = parser->MakeIdentifier(@$, "JOB");
+    }
+  | "JOBLOG"
+    {
+      $$ = parser->MakeIdentifier(@$, "JOBLOG");
     }
   ;
 
@@ -7503,6 +7508,7 @@ keyword_as_identifier:
     | "ISOLATION"
     | "ITERATE"
     | "JOB"
+    | "JOBLOG"
     | "JSON"
     | "KEY"
     | "LANGUAGE"
