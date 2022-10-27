@@ -14,20 +14,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-env:
-  target: '//zetasql/parser/...'
-  build_argv: '--features=-supports_dynamic_linker '
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   centos-build:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/aceforeverd/hybridsql-base:0.4.0
-    env:
-      BAZEL_LINKOPTS: '-static-libstdc++:-lm'
-      BAZEL_LINKLIBS: '-l%:libstdc++.a'
-      build_argv: '--features=-supports_dynamic_linker '
     steps:
       - uses: actions/checkout@v2
 
@@ -79,7 +71,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '8'
@@ -118,13 +110,17 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 120
     env:
-      build_argv: '--features=-supports_dynamic_linker '
       bazel_version: '3.7.2'
     steps:
       - uses: actions/checkout@v3
 
       - name: update bazel version
         run: echo ${{ env.bazel_version }} > .bazelversion
+
+      - name: setup python3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
       - name: install bazelisk
         run: |
