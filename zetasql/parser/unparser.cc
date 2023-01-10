@@ -528,6 +528,9 @@ void Unparser::visitASTCreateTableStatement(
     println("LIKE");
     node->like_table_name()->Accept(this, data);
   }
+  if (node->like_table_clause()) {
+    node->like_table_clause()->Accept(this, data);
+  }
   if (node->clone_data_source() != nullptr) {
     println("CLONE");
     node->clone_data_source()->Accept(this, data);
@@ -2235,6 +2238,18 @@ void Unparser::visitASTWindowAttributeExcludeCurrentRow(
 void Unparser::visitASTWindowAttributeInstNotInWindow(
     const ASTWindowAttributeInstNotInWindow *node, void *data) {
   print("INSTANCE_NOT_IN_WINDOW");
+}
+
+void Unparser::visitASTLikeTableClause(const ASTLikeTableClause *node,
+                                       void *data) {
+  println("LIKE");
+  switch (node->kind()) {
+    case ASTLikeTableClause::PARQUET: {
+      print("PARQUET");
+      break;
+    }
+  }
+  node->path()->Accept(this, data);
 }
 
 void Unparser::visitASTPartitionBy(const ASTPartitionBy* node, void* data) {

@@ -364,6 +364,7 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_WINDOW_ATTRIBUTE_EXCLUDE_CURRENT_ROW] = "WindowAttributeExcludeCurrentRow";
   map[AST_WINDOW_ATTRIBUTE_INST_NOT_IN_WINDOW] = "WindowAttributeInstNotInWindow";
   map[AST_WINDOW_ATTRIBUTE_LIST] = "WindowAttributeList";
+  map[AST_LIKE_TABLE_CLAUSE] = "LikeTableClause";
   for (int kind = kFirstASTNodeKind; kind <= kLastASTNodeKind;
        ++kind) {
     ZETASQL_DCHECK(zetasql_base::ContainsKey(map, static_cast<ASTNodeKind>(kind)))
@@ -1685,6 +1686,15 @@ absl::string_view SchemaObjectKindToName(SchemaObjectKind schema_object_kind) {
     default:
       return "<INVALID SCHEMA OBJECT KIND>";
   }
+}
+
+std::string ASTLikeTableClause::SingleNodeDebugString() const {
+  auto result = ASTNode::SingleNodeDebugString();
+  switch (kind()) {
+    case PARQUET:
+      absl::StrAppend(&result, "(PARQUET)");
+  }
+  return result;
 }
 
 }  // namespace zetasql

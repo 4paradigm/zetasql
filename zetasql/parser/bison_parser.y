@@ -881,6 +881,7 @@ using zetasql::ASTDropStatement;
 %token KW_OPTIONS "OPTIONS"
 %token KW_OUT "OUT"
 %token KW_OUTFILE "OUTFILE"
+%token KW_PARQUET "PARQUET"
 %token KW_PERCENT "PERCENT"
 %token KW_PIVOT "PIVOT"
 %token KW_POLICIES "POLICIES"
@@ -1185,6 +1186,7 @@ using zetasql::ASTDropStatement;
 %type <node> opt_language
 %type <node> opt_like_string_literal
 %type <node> opt_like_path_expression
+%type <node> opt_like_in_create_table
 %type <node> opt_limit_offset_clause
 %type <node> opt_config_clause
 %type <node> opt_maxsize
@@ -2553,7 +2555,7 @@ create_table_function_statement:
 create_table_statement:
     "CREATE" opt_or_replace opt_create_scope "TABLE" opt_if_not_exists
     maybe_dashed_path_expression opt_table_element_list
-    opt_like_path_expression opt_clone_table
+    opt_like_in_create_table opt_clone_table
     opt_partition_by_clause_no_hint opt_cluster_by_clause_no_hint
     opt_options_list opt_as_query
       {
@@ -3648,6 +3650,18 @@ opt_like_path_expression:
     "LIKE" maybe_dashed_path_expression
       {
         $$ = $2;
+      }
+    | /* Nothing */ { $$ = nullptr; }
+    ;
+
+opt_like_in_create_table:
+    "LIKE" maybe_dashed_path_expression
+      {
+        $$ = $2;
+      }
+    | "LIKE" "PARQUET" string_literal
+      {
+        $$ = MAKE_NODE(ASTLikeTableClause, @$, {$3});
       }
     | /* Nothing */ { $$ = nullptr; }
     ;
@@ -7531,6 +7545,7 @@ keyword_as_identifier:
     | "OPTIONS"
     | "OUT"
     | "OUTFILE"
+    | "PARQUET"
     | "PERCENT"
     | "PIVOT"
     | "POLICIES"

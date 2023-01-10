@@ -4586,6 +4586,33 @@ class ASTCreateTableFunctionStatement final : public ASTCreateFunctionStmtBase {
   const ASTQuery* query_ = nullptr;
 };
 
+// create table <table_name> like PARQUET '...'
+// - create table LIKE <table_name> is not covered by this class
+class ASTLikeTableClause final : public ASTNode {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_LIKE_TABLE_CLAUSE;
+  enum TableKind { PARQUET };
+
+  ASTLikeTableClause() : ASTNode(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+  std::string SingleNodeDebugString() const override;
+
+  auto kind() const { return kind_; }
+  void set_kind(TableKind k) { kind_ = k; }
+  auto path() const { return path_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&path_);
+  }
+
+  TableKind kind_ = PARQUET;
+  const ASTStringLiteral* path_;
+};
+
 class ASTCreateTableStmtBase : public ASTCreateStatement {
  public:
   explicit ASTCreateTableStmtBase(const ASTNodeKind kConcreteNodeKind)
@@ -4619,6 +4646,9 @@ class ASTCreateTableStatement final : public ASTCreateTableStmtBase {
   const ASTCloneDataSource* clone_data_source() const {
     return clone_data_source_;
   }
+  // optional like clause for `LIKE PARQUET '...'` in create table
+  // use like_table_name() instead for `LIKE <path-expression>`
+  auto like_table_clause() const { return like_table_clause_; }
   const ASTPartitionBy* partition_by() const { return partition_by_; }
   const ASTClusterBy* cluster_by() const { return cluster_by_; }
   const ASTQuery* query() const { return query_; }
@@ -4629,6 +4659,7 @@ class ASTCreateTableStatement final : public ASTCreateTableStmtBase {
     fl.AddRequired(&name_);
     fl.AddOptional(&table_element_list_, AST_TABLE_ELEMENT_LIST);
     fl.AddOptional(&like_table_name_, AST_PATH_EXPRESSION);
+    fl.AddOptional(&like_table_clause_, AST_LIKE_TABLE_CLAUSE);
     fl.AddOptional(&clone_data_source_, AST_CLONE_DATA_SOURCE);
     fl.AddOptional(&partition_by_, AST_PARTITION_BY);
     fl.AddOptional(&cluster_by_, AST_CLUSTER_BY);
@@ -4640,6 +4671,7 @@ class ASTCreateTableStatement final : public ASTCreateTableStmtBase {
   const ASTPartitionBy* partition_by_ = nullptr;             // May be NULL.
   const ASTClusterBy* cluster_by_ = nullptr;                 // May be NULL.
   const ASTQuery* query_ = nullptr;                          // May be NULL.
+  const ASTLikeTableClause* like_table_clause_ = nullptr;               // May be NULL.
 };
 
 class ASTCreateEntityStatement final : public ASTCreateStatement {

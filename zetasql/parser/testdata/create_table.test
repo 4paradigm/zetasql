@@ -2777,6 +2777,48 @@ CREATE TABLE t
 t1
 ==
 
+# CREATE TABLE LIKE PARQUET '...'
+create table t LIKE PARQUET 'hdfs://path';
+--
+CreateTableStatement [0-41]
+  PathExpression [13-14]
+    Identifier(t) [13-14]
+  LikeTableClause(PARQUET) [15-41]
+    StringLiteral('hdfs://path') [28-41]
+--
+CREATE TABLE t LIKE
+PARQUET 'hdfs://path'
+==
+
+# CREATE TABLE LIKE PARQUET, 'PARQUET' become like table name
+create table t LIKE PARQUET;
+--
+CreateTableStatement [0-27]
+  PathExpression [13-14]
+    Identifier(t) [13-14]
+  PathExpression [20-27]
+    Identifier(PARQUET) [20-27]
+--
+CREATE TABLE t LIKE
+PARQUET
+==
+
+# ERROR: CREATE TABLE LIKE PARXX '...'
+create table t LIKE PARXX 'hdfs://path';
+--
+ERROR: Syntax error: Expected end of input but got string literal 'hdfs://path' [at 1:27]
+create table t LIKE PARXX 'hdfs://path';
+                          ^
+==
+
+# ERROR: CREATE TABLE LIKE '...'
+create table t LIKE 'hdfs://path';
+--
+ERROR: Syntax error: Unexpected string literal 'hdfs://path' [at 1:21]
+create table t LIKE 'hdfs://path';
+                    ^
+==
+
 # CREATE TABLE LIKE without table name.
 create table t like;
 --

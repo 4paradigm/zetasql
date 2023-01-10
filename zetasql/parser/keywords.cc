@@ -225,6 +225,7 @@ constexpr KeywordInfoPOD kAllKeywords[] = {
     {"outfile", KW_OUTFILE},
     {"outer", KW_OUTER, KeywordInfo::kReserved},
     {"over", KW_OVER, KeywordInfo::kReserved},
+    {"parquet", KW_PARQUET},
     {"partition", KW_PARTITION, KeywordInfo::kReserved},
     {"percent", KW_PERCENT},
     {"pivot", KW_PIVOT},
