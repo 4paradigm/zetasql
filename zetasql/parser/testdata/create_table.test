@@ -2780,7 +2780,7 @@ t1
 # CREATE TABLE LIKE PARQUET '...'
 create table t LIKE PARQUET 'hdfs://path';
 --
-VECreateTableStatement [0-41]
+CreateTableStatement [0-41]
   PathExpression [13-14]
     Identifier(t) [13-14]
   LikeTableClause(PARQUET) [15-41]
@@ -2806,11 +2806,11 @@ PARQUET
 # CREATE TABLE LIKE HIVE '...'
 create table t LIKE HIVE 'hdfs://path';
 --
-CreateTableStatement [0-41]
+CreateTableStatement [0-38]
   PathExpression [13-14]
     Identifier(t) [13-14]
-  LikeTableClause(HIVE) [15-41]
-    StringLiteral('hdfs://path') [28-41]
+  LikeTableClause(HIVE) [15-38]
+    StringLiteral('hdfs://path') [25-38]
 --
 CREATE TABLE t LIKE
 HIVE 'hdfs://path'
@@ -2819,11 +2819,11 @@ HIVE 'hdfs://path'
 # CREATE TABLE LIKE HIVE, 'HIVE' become like table name
 create table t LIKE HIVE;
 --
-CreateTableStatement [0-27]
+CreateTableStatement [0-24]
   PathExpression [13-14]
     Identifier(t) [13-14]
-  PathExpression [20-27]
-    Identifier(HIVE) [20-27]
+  PathExpression [20-24]
+    Identifier(HIVE) [20-24]
 --
 CREATE TABLE t LIKE
 HIVE

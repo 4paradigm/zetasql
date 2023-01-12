@@ -475,6 +475,7 @@ class DashedIdentifierTmpNode final : public zetasql::ASTNode {
     zetasql::ASTExpression* default_expression;
     zetasql::ASTGeneratedColumnInfo* generated_column_info;
   } generated_or_default_column_info;
+  zetasql::ASTLikeTableClause::TableKind table_like_kind;
 }
 // YYEOF is a special token used to indicate the end of the input. It's alias
 // defaults to "end of file", but "end of input" is more appropriate for us.
@@ -1453,6 +1454,7 @@ using zetasql::ASTDropStatement;
 %type <null_handling_modifier> opt_null_handling_modifier
 %type <frame_unit> frame_unit
 %type <templated_parameter_kind> templated_parameter_kind
+%type <table_like_kind> table_like_kind
 
 %type <foreign_key_match> opt_foreign_key_match
 %type <foreign_key_match> foreign_key_match_mode
@@ -3655,18 +3657,27 @@ opt_like_path_expression:
     | /* Nothing */ { $$ = nullptr; }
     ;
 
+table_like_kind:
+    "PARQUET"
+      {
+        $$ = zetasql::ASTLikeTableClause::PARQUET;
+      }
+    | "HIVE"
+      {
+        $$ = zetasql::ASTLikeTableClause::HIVE;
+      }
+    ;
+
 opt_like_in_create_table:
     "LIKE" maybe_dashed_path_expression
       {
         $$ = $2;
       }
-    | "LIKE" "PARQUET" string_literal
+    | "LIKE" table_like_kind string_literal
       {
-        $$ = MAKE_NODE(ASTLikeTableClause, @$, {$3});
-      }
-    | "LIKE" "HIVE" string_literal
-      {
-        $$ = MAKE_NODE(ASTLikeTableClause, @$, {$3});
+        auto* like_table_clause = MAKE_NODE(ASTLikeTableClause, @$, {$3});
+        like_table_clause->set_kind($2);
+        $$ = like_table_clause;
       }
     | /* Nothing */ { $$ = nullptr; }
     ;
