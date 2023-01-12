@@ -571,6 +571,7 @@ outfile { return BisonParserImpl::token::KW_OUTFILE; };
 outer { return BisonParserImpl::token::KW_OUTER; }
 over { return BisonParserImpl::token::KW_OVER; }
 parquet { return BisonParserImpl::token::KW_PARQUET; }
+hive { return BisonParserImpl::token::KW_HIVE; }
 partition { return BisonParserImpl::token::KW_PARTITION; }
 percent { return BisonParserImpl::token::KW_PERCENT; }
 policies { return BisonParserImpl::token::KW_POLICIES; }

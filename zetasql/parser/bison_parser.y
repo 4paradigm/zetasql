@@ -882,6 +882,7 @@ using zetasql::ASTDropStatement;
 %token KW_OUT "OUT"
 %token KW_OUTFILE "OUTFILE"
 %token KW_PARQUET "PARQUET"
+%token KW_HIVE "HIVE"
 %token KW_PERCENT "PERCENT"
 %token KW_PIVOT "PIVOT"
 %token KW_POLICIES "POLICIES"
@@ -3660,6 +3661,10 @@ opt_like_in_create_table:
         $$ = $2;
       }
     | "LIKE" "PARQUET" string_literal
+      {
+        $$ = MAKE_NODE(ASTLikeTableClause, @$, {$3});
+      }
+    | "LIKE" "HIVE" string_literal
       {
         $$ = MAKE_NODE(ASTLikeTableClause, @$, {$3});
       }
@@ -7546,6 +7551,7 @@ keyword_as_identifier:
     | "OUT"
     | "OUTFILE"
     | "PARQUET"
+    | "HIVE"
     | "PERCENT"
     | "PIVOT"
     | "POLICIES"

@@ -1693,6 +1693,8 @@ std::string ASTLikeTableClause::SingleNodeDebugString() const {
   switch (kind()) {
     case PARQUET:
       absl::StrAppend(&result, "(PARQUET)");
+    case HIVE:
+      absl::StrAppend(&result, "(HIVE)");
   }
   return result;
 }

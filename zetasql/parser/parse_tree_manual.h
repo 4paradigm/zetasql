@@ -4591,7 +4591,7 @@ class ASTCreateTableFunctionStatement final : public ASTCreateFunctionStmtBase {
 class ASTLikeTableClause final : public ASTNode {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_LIKE_TABLE_CLAUSE;
-  enum TableKind { PARQUET };
+  enum TableKind { PARQUET, HIVE };
 
   ASTLikeTableClause() : ASTNode(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
