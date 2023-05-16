@@ -69,31 +69,31 @@ ALTER {{DATABASE|SCHEMA|TABLE|VIEW|MATERIALIZED VIEW}} foo drop;
 --
 ALTERNATION GROUP: DATABASE
 --
-ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT but got ";" [at 1:24]
+ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT or keyword PATH but got ";" [at 1:24]
 ALTER DATABASE foo drop;
                        ^
 --
 ALTERNATION GROUP: SCHEMA
 --
-ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT but got ";" [at 1:22]
+ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT or keyword PATH but got ";" [at 1:22]
 ALTER SCHEMA foo drop;
                      ^
 --
 ALTERNATION GROUP: TABLE
 --
-ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT but got ";" [at 1:21]
+ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT or keyword PATH but got ";" [at 1:21]
 ALTER TABLE foo drop;
                     ^
 --
 ALTERNATION GROUP: VIEW
 --
-ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT but got ";" [at 1:20]
+ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT or keyword PATH but got ";" [at 1:20]
 ALTER VIEW foo drop;
                    ^
 --
 ALTERNATION GROUP: MATERIALIZED VIEW
 --
-ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT but got ";" [at 1:33]
+ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT or keyword PATH but got ";" [at 1:33]
 ALTER MATERIALIZED VIEW foo drop;
                                 ^
 ==

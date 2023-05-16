@@ -1,6 +1,6 @@
 alter table foo.bar add;
 --
-ERROR: Syntax error: Expected keyword CHECK or keyword COLUMN or keyword CONSTRAINT or keyword FOREIGN but got ";" [at 1:24]
+ERROR: Syntax error: Unexpected ";" [at 1:24]
 alter table foo.bar add;
                        ^
 

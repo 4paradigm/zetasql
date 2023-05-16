@@ -3493,5 +3493,16 @@ void Unparser::visitASTRaiseStatement(const ASTRaiseStatement* node,
   }
 }
 
+void Unparser::visitASTAddPathAction(const ASTAddPathAction *node, void *data) {
+  print("ADD PATH");
+  node->path()->Accept(this, data);
+}
+
+void Unparser::visitASTDropPathAction(const ASTDropPathAction *node,
+                                      void *data) {
+  print("DROP PATH");
+  node->path()->Accept(this, data);
+}
+
 }  // namespace parser
 }  // namespace zetasql

@@ -7196,6 +7196,52 @@ class ASTAlterConstraintSetOptionsAction final : public ASTAlterAction {
   bool is_if_exists_ = false;
 };
 
+// ALTER table action for "ADD PATH" clause
+class ASTAddPathAction final : public ASTAlterAction {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_ADD_PATH_ACTION;
+
+  ASTAddPathAction() : ASTAlterAction(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  std::string GetSQLForAlterAction() const override;
+
+  auto path() const { return path_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&path_);
+  }
+
+  const ASTStringLiteral* path_ = nullptr;
+};
+
+// ALTER table action for "DROP PATH" clause
+class ASTDropPathAction final : public ASTAlterAction {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_DROP_PATH_ACTION;
+
+  ASTDropPathAction() : ASTAlterAction(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  std::string GetSQLForAlterAction() const override;
+
+  auto path() const { return path_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&path_);
+  }
+
+  const ASTStringLiteral* path_ = nullptr;
+};
+
 // ALTER table action for "ADD COLUMN" clause
 class ASTAddColumnAction final : public ASTAlterAction {
  public:

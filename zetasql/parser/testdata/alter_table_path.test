@@ -1,0 +1,25 @@
+# ALTER TABLE to add column.
+ALTER TABLE foo ADD PATH 'this is a path';
+--
+AlterTableStatement [0-41]
+  PathExpression [12-15]
+    Identifier(foo) [12-15]
+  AlterActionList [16-41]
+    AddPathAction [16-41]
+      StringLiteral('this is a path') [25-41]
+--
+ALTER TABLE foo ADD PATH 'this is a path'
+==
+
+# ALTER TABLE to drop column.
+ALTER TABLE foo drop PATH 'nothing';
+--
+AlterTableStatement [0-35]
+  PathExpression [12-15]
+    Identifier(foo) [12-15]
+  AlterActionList [16-35]
+    DropPathAction [16-35]
+      StringLiteral('nothing') [26-35]
+--
+ALTER TABLE foo DROP PATH 'nothing'
+==

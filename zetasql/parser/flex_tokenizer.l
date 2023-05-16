@@ -480,6 +480,7 @@ groups { return BisonParserImpl::token::KW_GROUPS; }
 hash { return BisonParserImpl::token::KW_HASH; }
 having { return BisonParserImpl::token::KW_HAVING; }
 hidden { return BisonParserImpl::token::KW_HIDDEN; }
+hive { return BisonParserImpl::token::KW_HIVE; }
 if { return BisonParserImpl::token::KW_IF; }
 ignore { return BisonParserImpl::token::KW_IGNORE; }
 immediate { return BisonParserImpl::token::KW_IMMEDIATE; }
@@ -571,8 +572,8 @@ outfile { return BisonParserImpl::token::KW_OUTFILE; };
 outer { return BisonParserImpl::token::KW_OUTER; }
 over { return BisonParserImpl::token::KW_OVER; }
 parquet { return BisonParserImpl::token::KW_PARQUET; }
-hive { return BisonParserImpl::token::KW_HIVE; }
 partition { return BisonParserImpl::token::KW_PARTITION; }
+path { return BisonParserImpl::token::KW_PATH; }
 percent { return BisonParserImpl::token::KW_PERCENT; }
 policies { return BisonParserImpl::token::KW_POLICIES; }
 policy { return BisonParserImpl::token::KW_POLICY; }

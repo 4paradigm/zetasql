@@ -646,6 +646,10 @@ class Unparser : public ParseTreeVisitor {
   void visitASTRaiseStatement(const ASTRaiseStatement* node,
                               void* data) override;
 
+  void visitASTAddPathAction(const ASTAddPathAction *node, void *data) override;
+  void visitASTDropPathAction(const ASTDropPathAction *node,
+                              void *data) override;
+
  protected:
   // Set break_line to true if you want to print each child on a separate line.
   virtual void UnparseChildrenWithSeparator(const ASTNode* node, void* data,
