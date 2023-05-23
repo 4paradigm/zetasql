@@ -1,6 +1,6 @@
 alter table foo.bar drop;
 --
-ERROR: Syntax error: Expected keyword COLUMN or keyword CONSTRAINT or keyword PATH but got ";" [at 1:25]
+ERROR: Syntax error: Expected OFFLINE_PATH or keyword COLUMN or keyword CONSTRAINT but got ";" [at 1:25]
 alter table foo.bar drop;
                         ^
 

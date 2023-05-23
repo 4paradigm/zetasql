@@ -7197,11 +7197,11 @@ class ASTAlterConstraintSetOptionsAction final : public ASTAlterAction {
 };
 
 // ALTER table action for "ADD PATH" clause
-class ASTAddPathAction final : public ASTAlterAction {
+class ASTAddOfflinePathAction final : public ASTAlterAction {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_ADD_PATH_ACTION;
 
-  ASTAddPathAction() : ASTAlterAction(kConcreteNodeKind) {}
+  ASTAddOfflinePathAction() : ASTAlterAction(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
@@ -7220,11 +7220,11 @@ class ASTAddPathAction final : public ASTAlterAction {
 };
 
 // ALTER table action for "DROP PATH" clause
-class ASTDropPathAction final : public ASTAlterAction {
+class ASTDropOfflinePathAction final : public ASTAlterAction {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_DROP_PATH_ACTION;
 
-  ASTDropPathAction() : ASTAlterAction(kConcreteNodeKind) {}
+  ASTDropOfflinePathAction() : ASTAlterAction(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;

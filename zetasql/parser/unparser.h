@@ -646,8 +646,8 @@ class Unparser : public ParseTreeVisitor {
   void visitASTRaiseStatement(const ASTRaiseStatement* node,
                               void* data) override;
 
-  void visitASTAddPathAction(const ASTAddPathAction *node, void *data) override;
-  void visitASTDropPathAction(const ASTDropPathAction *node,
+  void visitASTAddOfflinePathAction(const ASTAddOfflinePathAction *node, void *data) override;
+  void visitASTDropOfflinePathAction(const ASTDropOfflinePathAction *node,
                               void *data) override;
 
  protected:

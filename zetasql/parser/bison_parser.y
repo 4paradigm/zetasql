@@ -884,7 +884,7 @@ using zetasql::ASTDropStatement;
 %token KW_OUTFILE "OUTFILE"
 %token KW_PARQUET "PARQUET"
 %token KW_HIVE "HIVE"
-%token KW_PATH "PATH"
+%token KW_OFFLINE_PATH "OFFLINE_PATH"
 %token KW_PERCENT "PERCENT"
 %token KW_PIVOT "PIVOT"
 %token KW_POLICIES "POLICIES"
@@ -1673,14 +1673,14 @@ alter_action:
         node->set_is_if_exists($3);
         $$ = node;
       }
-    | "ADD" "PATH" string_literal
+    | "ADD" "OFFLINE_PATH" string_literal
       {
-        auto* node = MAKE_NODE(ASTAddPathAction, @$, {$3});
+        auto* node = MAKE_NODE(ASTAddOfflinePathAction, @$, {$3});
         $$ = node;
       }
-    | "DROP" "PATH" string_literal
+    | "DROP" "OFFLINE_PATH" string_literal
       {
-        auto* node = MAKE_NODE(ASTDropPathAction, @$, {$3});
+        auto* node = MAKE_NODE(ASTDropOfflinePathAction, @$, {$3});
         $$ = node;
       }
     | "ADD" "COLUMN" opt_if_not_exists table_column_definition
@@ -7578,7 +7578,7 @@ keyword_as_identifier:
     | "OUTFILE"
     | "PARQUET"
     | "HIVE"
-    | "PATH"
+    | "OFFLINE_PATH"
     | "PERCENT"
     | "PIVOT"
     | "POLICIES"

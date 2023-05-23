@@ -1,25 +1,25 @@
 # ALTER TABLE to add column.
-ALTER TABLE foo ADD PATH 'this is a path';
+ALTER TABLE foo ADD OFFLINE_PATH 'this is a path';
 --
-AlterTableStatement [0-41]
+AlterTableStatement [0-49]
   PathExpression [12-15]
     Identifier(foo) [12-15]
-  AlterActionList [16-41]
-    AddPathAction [16-41]
-      StringLiteral('this is a path') [25-41]
+  AlterActionList [16-49]
+    AddOfflinePathAction [16-49]
+      StringLiteral('this is a path') [33-49]
 --
-ALTER TABLE foo ADD PATH 'this is a path'
+ALTER TABLE foo ADD OFFLINE_PATH 'this is a path'
 ==
 
 # ALTER TABLE to drop column.
-ALTER TABLE foo drop PATH 'nothing';
+ALTER TABLE foo drop OFFLINE_PATH 'nothing';
 --
-AlterTableStatement [0-35]
+AlterTableStatement [0-43]
   PathExpression [12-15]
     Identifier(foo) [12-15]
-  AlterActionList [16-35]
-    DropPathAction [16-35]
-      StringLiteral('nothing') [26-35]
+  AlterActionList [16-43]
+    DropOfflinePathAction [16-43]
+      StringLiteral('nothing') [34-43]
 --
-ALTER TABLE foo DROP PATH 'nothing'
+ALTER TABLE foo DROP OFFLINE_PATH 'nothing'
 ==

@@ -573,7 +573,7 @@ outer { return BisonParserImpl::token::KW_OUTER; }
 over { return BisonParserImpl::token::KW_OVER; }
 parquet { return BisonParserImpl::token::KW_PARQUET; }
 partition { return BisonParserImpl::token::KW_PARTITION; }
-path { return BisonParserImpl::token::KW_PATH; }
+offline_path { return BisonParserImpl::token::KW_OFFLINE_PATH; }
 percent { return BisonParserImpl::token::KW_PERCENT; }
 policies { return BisonParserImpl::token::KW_POLICIES; }
 policy { return BisonParserImpl::token::KW_POLICY; }

@@ -3493,14 +3493,14 @@ void Unparser::visitASTRaiseStatement(const ASTRaiseStatement* node,
   }
 }
 
-void Unparser::visitASTAddPathAction(const ASTAddPathAction *node, void *data) {
-  print("ADD PATH");
+void Unparser::visitASTAddOfflinePathAction(const ASTAddOfflinePathAction *node, void *data) {
+  print("ADD OFFLINE_PATH");
   node->path()->Accept(this, data);
 }
 
-void Unparser::visitASTDropPathAction(const ASTDropPathAction *node,
+void Unparser::visitASTDropOfflinePathAction(const ASTDropOfflinePathAction *node,
                                       void *data) {
-  print("DROP PATH");
+  print("DROP OFFLINE_PATH");
   node->path()->Accept(this, data);
 }
 
