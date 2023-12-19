@@ -5380,6 +5380,30 @@ class ASTStructField final : public ASTNode {
   const ASTType* type_ = nullptr;
 };
 
+class ASTMapType final : public ASTType {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_MAP_TYPE;
+
+  ASTMapType() : ASTType(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const ASTType* key_type() const { return key_type_; }
+  const ASTType* value_type() const { return value_type_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&key_type_);
+    fl.AddRequired(&value_type_);
+    fl.AddOptional(mutable_type_parameters_ptr(), AST_TYPE_PARAMETER_LIST);
+  }
+
+  const ASTType* key_type_ = nullptr;
+  const ASTType* value_type_ = nullptr;
+};
+
 class ASTTemplatedParameterType final : public ASTNode {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =
@@ -5392,6 +5416,7 @@ class ASTTemplatedParameterType final : public ASTNode {
     ANY_STRUCT,
     ANY_ARRAY,
     ANY_TABLE,
+    ANY_MAP,
   };
 
   ASTTemplatedParameterType() : ASTNode(kConcreteNodeKind) {}
@@ -5905,6 +5930,35 @@ class ASTArrayColumnSchema final : public ASTColumnSchema {
   }
 
   const ASTColumnSchema* element_schema_ = nullptr;
+};
+
+class ASTMapColumnSchema final : public ASTColumnSchema {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_MAP_COLUMN_SCHEMA;
+
+  ASTMapColumnSchema() : ASTColumnSchema(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const ASTColumnSchema *key_schema() const { return key_schema_; }
+  const ASTColumnSchema *value_schema() const { return value_schema_; }
+
+private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&key_schema_);
+    fl.AddRequired(&value_schema_);
+    fl.AddOptional(mutable_type_parameters_ptr(), AST_TYPE_PARAMETER_LIST);
+    fl.AddOptional(mutable_generated_column_info_ptr(),
+                   AST_GENERATED_COLUMN_INFO);
+    fl.AddOptionalExpression(mutable_default_expression_ptr());
+    fl.AddOptional(mutable_attributes_ptr(), AST_COLUMN_ATTRIBUTE_LIST);
+    fl.AddOptional(mutable_options_list_ptr(), AST_OPTIONS_LIST);
+  }
+
+  const ASTColumnSchema* key_schema_ = nullptr;
+  const ASTColumnSchema* value_schema_ = nullptr;
 };
 
 class ASTStructColumnSchema final : public ASTColumnSchema {

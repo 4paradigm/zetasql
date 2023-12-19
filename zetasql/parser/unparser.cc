@@ -3535,5 +3535,27 @@ void Unparser::visitASTDropOfflinePathAction(const ASTDropOfflinePathAction *nod
   node->path()->Accept(this, data);
 }
 
+void Unparser::visitASTMapType(const ASTMapType *node, void *data) {
+  print("MAP<");
+  node->key_type()->Accept(this, data);
+  print(",");
+  node->value_type()->Accept(this, data);
+  print(">");
+
+  if (node->type_parameters() != nullptr) {
+    node->type_parameters()->Accept(this, data);
+  }
+}
+
+void Unparser::visitASTMapColumnSchema(const ASTMapColumnSchema *node,
+                                       void *data) {
+  print("MAP<");
+  node->key_schema()->Accept(this, data);
+  print(",");
+  node->value_schema()->Accept(this, data);
+  print(">");
+  UnparseColumnSchema(node, data);
+}
+
 }  // namespace parser
 }  // namespace zetasql

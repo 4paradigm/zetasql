@@ -718,6 +718,7 @@ using zetasql::ASTDropStatement;
 %token KW_RLIKE "RLIKE"
 %token KW_LIMIT "LIMIT"
 %token KW_LOOKUP "LOOKUP"
+%token KW_MAP "MAP"
 %token KW_MERGE "MERGE"
 %token KW_MOD "MOD"
 %token KW_NATURAL "NATURAL"
@@ -1130,6 +1131,8 @@ using zetasql::ASTDropStatement;
 %type <expression> json_literal
 %type <expression> lambda_argument
 %type <node> lambda_argument_list
+%type <node> map_type
+%type <node> map_column_schema_inner
 %type <node> merge_action
 %type <node> merge_insert_value_list_or_source_row
 %type <node> merge_source
@@ -2836,10 +2839,18 @@ struct_column_schema_inner:
     | struct_column_schema_prefix ">"
     ;
 
+map_column_schema_inner:
+    "MAP" "<" field_schema "," field_schema ">"
+      {
+        $$ = MAKE_NODE(ASTMapColumnSchema, @$, {$3, $5});
+      }
+    ;
+
 raw_column_schema_inner:
     simple_column_schema_inner
     | array_column_schema_inner
     | struct_column_schema_inner
+    | map_column_schema_inner
     ;
 
 column_schema_inner:
@@ -6320,8 +6331,15 @@ struct_type:
       }
     ;
 
+map_type:
+    "MAP" "<" type "," type ">"
+      {
+        $$ = MAKE_NODE(ASTMapType, @$, {$3, $5});
+      }
+    ;
+
 raw_type:
-    array_type | struct_type | type_name ;
+    array_type | struct_type | map_type | type_name ;
 
 type_parameter:
       integer_literal
@@ -6381,6 +6399,10 @@ templated_parameter_kind:
     | "ARRAY"
       {
         $$ = zetasql::ASTTemplatedParameterType::ANY_ARRAY;
+      }
+    | "MAP"
+      {
+        $$ = zetasql::ASTTemplatedParameterType::ANY_MAP;
       }
     | identifier
       {
@@ -6654,6 +6676,10 @@ function_name_from_keyword:
         $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
       }
     | "AT"
+      {
+        $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
+      }
+    | "MAP"
       {
         $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
       }
@@ -7435,6 +7461,7 @@ reserved_keyword_rule:
     | "LIKE"
     | "LIMIT"
     | "LOOKUP"
+    | "MAP"
     | "MERGE"
     | "MOD"
     | "NATURAL"

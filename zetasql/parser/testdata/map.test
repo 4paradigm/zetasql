@@ -1,0 +1,72 @@
+# construct map data type from map function
+# access map value by []operator
+#
+# we represent '[]' in syntax tree with ArrayElement, but it can
+# also apply to map values
+select map("k", "v")["k"]
+--
+QueryStatement [0-25]
+  Query [0-25]
+    Select [0-25]
+      SelectList [7-25]
+        SelectColumn [7-25]
+          ArrayElement [20-25]
+            FunctionCall [7-20]
+              PathExpression [7-10]
+                Identifier(`map`) [7-10]
+              StringLiteral("k") [11-14]
+              StringLiteral("v") [16-19]
+            StringLiteral("k") [21-24]
+--
+SELECT
+  `map`("k", "v")["k"]
+==
+
+select map("k", "v").k
+--
+QueryStatement [0-22]
+  Query [0-22]
+    Select [0-22]
+      SelectList [7-22]
+        SelectColumn [7-22]
+          DotIdentifier [20-22]
+            FunctionCall [7-20]
+              PathExpression [7-10]
+                Identifier(`map`) [7-10]
+              StringLiteral("k") [11-14]
+              StringLiteral("v") [16-19]
+            Identifier(k) [21-22]
+--
+SELECT
+  `map`("k", "v").k
+==
+
+# casting to map type
+select cast(col as MAP<STRING, TIMESTAMP>)
+--
+QueryStatement [0-42]
+  Query [0-42]
+    Select [0-42]
+      SelectList [7-42]
+        SelectColumn [7-42]
+          CastExpression [7-42]
+            PathExpression [12-15]
+              Identifier(col) [12-15]
+            MapType [19-41]
+              SimpleType [23-29]
+                PathExpression [23-29]
+                  Identifier(STRING) [23-29]
+              SimpleType [31-40]
+                PathExpression [31-40]
+                  Identifier(TIMESTAMP) [31-40]
+--
+SELECT
+  CAST(col AS MAP< STRING, TIMESTAMP >)
+==
+
+select cast(col as MAP<>)
+--
+ERROR: Syntax error: Unexpected ">" [at 1:24]
+select cast(col as MAP<>)
+                       ^
+==

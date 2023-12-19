@@ -4766,3 +4766,41 @@ CREATE TABLE t CLONE
 t1
 OPTIONS(expiration_timestamp = TIMESTAMP "2019-05-22 00:00:00 UTC", description = "mydataset.source_table clone",
   label = ARRAY["experiments"])
+==
+
+# create table with map type
+# both map type and key/value type inside map accept optional column attribute and option list
+create table t (
+  c1 STRING,
+  c2 map<STRING, TIMESTAMP NOT NULL> NOT NULL
+);
+--
+CreateTableStatement [0-77]
+  PathExpression [13-14]
+    Identifier(t) [13-14]
+  TableElementList [15-77]
+    ColumnDefinition [19-28]
+      Identifier(c1) [19-21]
+      SimpleColumnSchema [22-28]
+        PathExpression [22-28]
+          Identifier(STRING) [22-28]
+    ColumnDefinition [32-75]
+      Identifier(c2) [32-34]
+      MapColumnSchema [35-75]
+        SimpleColumnSchema [39-45]
+          PathExpression [39-45]
+            Identifier(STRING) [39-45]
+        SimpleColumnSchema [47-65]
+          PathExpression [47-56]
+            Identifier(TIMESTAMP) [47-56]
+          ColumnAttributeList [57-65]
+            NotNullColumnAttribute [57-65]
+        ColumnAttributeList [67-75]
+          NotNullColumnAttribute [67-75]
+--
+CREATE TABLE t
+(
+  c1 STRING,
+  c2 MAP< STRING, TIMESTAMP NOT NULL > NOT NULL
+)
+==

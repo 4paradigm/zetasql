@@ -371,6 +371,8 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_LIKE_TABLE_CLAUSE] = "LikeTableClause";
   map[AST_ADD_PATH_ACTION] = "AddOfflinePathAction";
   map[AST_DROP_PATH_ACTION] = "DropOfflinePathAction";
+  map[AST_MAP_COLUMN_SCHEMA] = "MapColumnSchema";
+  map[AST_MAP_TYPE] = "MapType";
   for (int kind = kFirstASTNodeKind; kind <= kLastASTNodeKind;
        ++kind) {
     ZETASQL_DCHECK(zetasql_base::ContainsKey(map, static_cast<ASTNodeKind>(kind)))

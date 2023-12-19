@@ -40,7 +40,7 @@
    the normal rules. */
 %x DOT_IDENTIFIER
 
-/* This inclusive state is for in ARRAY<...> and STRUCT<...>. It turns off the
+/* This inclusive state is for in ARRAY<...>, MAP<...> and STRUCT<...>. It turns off the
    parsing of <<, >>, and <>, but leaves everything else the same. Doing this in
    the tokenizer avoids complicated rules and duplication at the parser level.
 
@@ -519,6 +519,7 @@ limit { return BisonParserImpl::token::KW_LIMIT; }
 load { return BisonParserImpl::token::KW_LOAD; }
 lookup { return BisonParserImpl::token::KW_LOOKUP; }
 loop { return BisonParserImpl::token::KW_LOOP; }
+map { return BisonParserImpl::token::KW_MAP; }
 match { return BisonParserImpl::token::KW_MATCH; }
 matched { return BisonParserImpl::token::KW_MATCHED; }
 materialized  { return BisonParserImpl::token::KW_MATERIALIZED; }
@@ -871,6 +872,7 @@ zone { return BisonParserImpl::token::KW_ZONE; }
  /* Don't recognize these in ARRAY<> or STRUCT<> context. */
 "<>"                      {
   if (prev_token_ == BisonParserImpl::token::KW_ARRAY ||
+      prev_token_ == BisonParserImpl::token::KW_MAP ||
       prev_token_ == BisonParserImpl::token::KW_STRUCT) {
     // Match only the '<', and move to the same state that that production would
     // have moved to.
@@ -890,6 +892,7 @@ zone { return BisonParserImpl::token::KW_ZONE; }
 }
 "<"                       {
   if (prev_token_ == BisonParserImpl::token::KW_ARRAY ||
+      prev_token_ == BisonParserImpl::token::KW_MAP ||
       prev_token_ == BisonParserImpl::token::KW_STRUCT) {
     // Switch to a mode that does not recognize >>. This only works as long as
     // there are no legal "independent" < and > inside array or struct types
