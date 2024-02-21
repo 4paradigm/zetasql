@@ -407,6 +407,7 @@ current_time { return BisonParserImpl::token::KW_CURRENT_TIME;}
 current_row { return BisonParserImpl::token::KW_CURRENT_ROW; }
 data { return BisonParserImpl::token::KW_DATA; }
 database { return BisonParserImpl::token::KW_DATABASE; }
+databases { return BisonParserImpl::token::KW_DATABASES; }
 date { return BisonParserImpl::token::KW_DATE; }
 datetime { return BisonParserImpl::token::KW_DATETIME; }
 decimal { return BisonParserImpl::token::KW_DECIMAL; }
@@ -603,6 +604,7 @@ return { return BisonParserImpl::token::KW_RETURN; }
 returns { return BisonParserImpl::token::KW_RETURNS; }
 revoke { return BisonParserImpl::token::KW_REVOKE; }
 right { return BisonParserImpl::token::KW_RIGHT; }
+role { return BisonParserImpl::token::KW_ROLE; }
 rollback { return BisonParserImpl::token::KW_ROLLBACK; }
 rollup { return BisonParserImpl::token::KW_ROLLUP; }
 row { return BisonParserImpl::token::KW_ROW; }

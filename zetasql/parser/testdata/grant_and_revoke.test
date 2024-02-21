@@ -15,6 +15,299 @@ GrantStatement [0-54]
 GRANT `select`, `update` ON table foo TO 'user@google.com'
 ==
 
+grant alter user on t1 to 'user1'
+--
+GrantStatement [0-33]
+  Privileges [6-16]
+    Privilege [6-16]
+      Identifier(`alter user`) [6-16]
+  PathExpression [20-22]
+    Identifier(t1) [20-22]
+  GranteeList [26-33]
+    StringLiteral('user1') [26-33]
+--
+GRANT `alter user` ON t1 TO 'user1'
+==
+
+grant create on t1 to 'user1'
+--
+GrantStatement [0-29]
+  Privileges [6-12]
+    Privilege [6-12]
+      Identifier(`create`) [6-12]
+  PathExpression [16-18]
+    Identifier(t1) [16-18]
+  GranteeList [22-29]
+    StringLiteral('user1') [22-29]
+--
+GRANT `create` ON t1 TO 'user1'
+==
+
+grant create user on t1 to 'user1'
+--
+GrantStatement [0-34]
+  Privileges [6-17]
+    Privilege [6-17]
+      Identifier(`create user`) [6-17]
+  PathExpression [21-23]
+    Identifier(t1) [21-23]
+  GranteeList [27-34]
+    StringLiteral('user1') [27-34]
+--
+GRANT `create user` ON t1 TO 'user1'
+==
+
+grant create role on t1 to 'user1'
+--
+GrantStatement [0-34]
+  Privileges [6-17]
+    Privilege [6-17]
+      Identifier(`create role`) [6-17]
+  PathExpression [21-23]
+    Identifier(t1) [21-23]
+  GranteeList [27-34]
+    StringLiteral('user1') [27-34]
+--
+GRANT `create role` ON t1 TO 'user1'
+==
+
+grant delete on t1 to 'user1'
+--
+GrantStatement [0-29]
+  Privileges [6-12]
+    Privilege [6-12]
+      Identifier(delete) [6-12]
+  PathExpression [16-18]
+    Identifier(t1) [16-18]
+  GranteeList [22-29]
+    StringLiteral('user1') [22-29]
+--
+GRANT delete ON t1 TO 'user1'
+==
+
+grant deploy on t1 to 'user1'
+--
+GrantStatement [0-29]
+  Privileges [6-12]
+    Privilege [6-12]
+      Identifier(deploy) [6-12]
+  PathExpression [16-18]
+    Identifier(t1) [16-18]
+  GranteeList [22-29]
+    StringLiteral('user1') [22-29]
+--
+GRANT deploy ON t1 TO 'user1'
+==
+
+grant drop on t1 to 'user1'
+--
+GrantStatement [0-27]
+  Privileges [6-10]
+    Privilege [6-10]
+      Identifier(drop) [6-10]
+  PathExpression [14-16]
+    Identifier(t1) [14-16]
+  GranteeList [20-27]
+    StringLiteral('user1') [20-27]
+--
+GRANT drop ON t1 TO 'user1'
+==
+
+grant drop deployment on t1 to 'user1'
+--
+GrantStatement [0-38]
+  Privileges [6-21]
+    Privilege [6-21]
+      Identifier(`drop deployment`) [6-21]
+  PathExpression [25-27]
+    Identifier(t1) [25-27]
+  GranteeList [31-38]
+    StringLiteral('user1') [31-38]
+--
+GRANT `drop deployment` ON t1 TO 'user1'
+==
+
+grant drop user on t1 to 'user1'
+--
+GrantStatement [0-32]
+  Privileges [6-15]
+    Privilege [6-15]
+      Identifier(`drop user`) [6-15]
+  PathExpression [19-21]
+    Identifier(t1) [19-21]
+  GranteeList [25-32]
+    StringLiteral('user1') [25-32]
+--
+GRANT `drop user` ON t1 TO 'user1'
+==
+
+grant drop role on t1 to 'user1'
+--
+GrantStatement [0-32]
+  Privileges [6-15]
+    Privilege [6-15]
+      Identifier(`drop role`) [6-15]
+  PathExpression [19-21]
+    Identifier(t1) [19-21]
+  GranteeList [25-32]
+    StringLiteral('user1') [25-32]
+--
+GRANT `drop role` ON t1 TO 'user1'
+==
+
+grant execute on t1 to 'user1'
+--
+GrantStatement [0-30]
+  Privileges [6-13]
+    Privilege [6-13]
+      Identifier(execute) [6-13]
+  PathExpression [17-19]
+    Identifier(t1) [17-19]
+  GranteeList [23-30]
+    StringLiteral('user1') [23-30]
+--
+GRANT execute ON t1 TO 'user1'
+==
+
+grant index on t1 to 'user1'
+--
+GrantStatement [0-28]
+  Privileges [6-11]
+    Privilege [6-11]
+      Identifier(`index`) [6-11]
+  PathExpression [15-17]
+    Identifier(t1) [15-17]
+  GranteeList [21-28]
+    StringLiteral('user1') [21-28]
+--
+GRANT `index` ON t1 TO 'user1'
+==
+
+grant insert on t1 to 'user1'
+--
+GrantStatement [0-29]
+  Privileges [6-12]
+    Privilege [6-12]
+      Identifier(insert) [6-12]
+  PathExpression [16-18]
+    Identifier(t1) [16-18]
+  GranteeList [22-29]
+    StringLiteral('user1') [22-29]
+--
+GRANT insert ON t1 TO 'user1'
+==
+
+grant select on t1 to 'user1'
+--
+GrantStatement [0-29]
+  Privileges [6-12]
+    Privilege [6-12]
+      Identifier(`select`) [6-12]
+  PathExpression [16-18]
+    Identifier(t1) [16-18]
+  GranteeList [22-29]
+    StringLiteral('user1') [22-29]
+--
+GRANT `select` ON t1 TO 'user1'
+==
+
+grant show databases on t1 to 'user1'
+--
+GrantStatement [0-37]
+  Privileges [6-20]
+    Privilege [6-20]
+      Identifier(`show databases`) [6-20]
+  PathExpression [24-26]
+    Identifier(t1) [24-26]
+  GranteeList [30-37]
+    StringLiteral('user1') [30-37]
+--
+GRANT `show databases` ON t1 TO 'user1'
+==
+
+grant create user, drop user on t1 to 'user1'
+--
+GrantStatement [0-45]
+  Privileges [6-28]
+    Privilege [6-17]
+      Identifier(`create user`) [6-17]
+    Privilege [19-28]
+      Identifier(`drop user`) [19-28]
+  PathExpression [32-34]
+    Identifier(t1) [32-34]
+  GranteeList [38-45]
+    StringLiteral('user1') [38-45]
+--
+GRANT `create user`, `drop user` ON t1 TO 'user1'
+==
+
+grant select, delete on table foo to 'user@google.com'
+--
+GrantStatement [0-54]
+  Privileges [6-20]
+    Privilege [6-12]
+      Identifier(`select`) [6-12]
+    Privilege [14-20]
+      Identifier(delete) [14-20]
+  Identifier(table) [24-29]
+  PathExpression [30-33]
+    Identifier(foo) [30-33]
+  GranteeList [37-54]
+    StringLiteral('user@google.com') [37-54]
+--
+GRANT `select`, delete ON table foo TO 'user@google.com'
+==
+
+grant select, delete on db1.t1 to 'user@google.com'
+--
+GrantStatement [0-51]
+  Privileges [6-20]
+    Privilege [6-12]
+      Identifier(`select`) [6-12]
+    Privilege [14-20]
+      Identifier(delete) [14-20]
+  PathExpression [24-30]
+    Identifier(db1) [24-27]
+    Identifier(t1) [28-30]
+  GranteeList [34-51]
+    StringLiteral('user@google.com') [34-51]
+--
+GRANT `select`, delete ON db1.t1 TO 'user@google.com'
+==
+
+grant select, create on table foo to 'user@google.com'
+--
+GrantStatement [0-54]
+  Privileges [6-20]
+    Privilege [6-12]
+      Identifier(`select`) [6-12]
+    Privilege [14-20]
+      Identifier(`create`) [14-20]
+  Identifier(table) [24-29]
+  PathExpression [30-33]
+    Identifier(foo) [30-33]
+  GranteeList [37-54]
+    StringLiteral('user@google.com') [37-54]
+--
+GRANT `select`, `create` ON table foo TO 'user@google.com'
+==
+
+grant select, create user on t1 to 'user1'
+--
+GrantStatement [0-42]
+  Privileges [6-25]
+    Privilege [6-12]
+      Identifier(`select`) [6-12]
+    Privilege [14-25]
+      Identifier(`create user`) [14-25]
+  PathExpression [29-31]
+    Identifier(t1) [29-31]
+  GranteeList [35-42]
+    StringLiteral('user1') [35-42]
+--
+GRANT `select`, `create user` ON t1 TO 'user1'
+==
+
 grant all privileges on view foo to @user1, @@user2, 'mdbuser/bar1', 'mdbuser/bar2'
 --
 GrantStatement [0-83]

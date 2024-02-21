@@ -818,6 +818,7 @@ using zetasql::ASTDropStatement;
 %token KW_CURRENT_ROW "CURRENT_ROW"
 %token KW_DATA "DATA"
 %token KW_DATABASE "DATABASE"
+%token KW_DATABASES "DATABASES"
 %token KW_DATE "DATE"
 %token KW_DATETIME "DATETIME"
 %token KW_DECIMAL "DECIMAL"
@@ -908,6 +909,7 @@ using zetasql::ASTDropStatement;
 %token KW_RETURN "RETURN"
 %token KW_RETURNS "RETURNS"
 %token KW_REVOKE "REVOKE"
+%token KW_ROLE "ROLE"
 %token KW_ROLLBACK "ROLLBACK"
 %token KW_ROW "ROW"
 %token KW_RUN "RUN"
@@ -3439,6 +3441,50 @@ privilege_name:
       {
         // The SELECT keyword is allowed to be a privilege name.
         $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
+      }
+    | KW_CREATE
+      {
+        // The CREATE keyword is allowed to be a privilege name.
+        $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
+      }
+    | KW_INDEX
+      {
+        $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
+      }
+    | KW_ALTER KW_USER
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    | KW_CREATE KW_USER
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    | KW_CREATE KW_ROLE
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    | KW_DROP "DEPLOYMENT"
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    | KW_DROP KW_USER
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    | KW_DROP KW_ROLE
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    | KW_SHOW KW_DATABASES
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
     ;
 
@@ -7557,6 +7603,7 @@ keyword_as_identifier:
     | "CURRENT_ROW"
     | "DATA"
     | "DATABASE"
+    | "DATABASES"
     | "DATE"
     | "DATETIME"
     | "DECIMAL"
@@ -7648,6 +7695,7 @@ keyword_as_identifier:
     | "RETURNS"
     | "RETURN"
     | "REVOKE"
+    | "ROLE"
     | "ROLLBACK"
     | "ROW"
     | "RUN"
