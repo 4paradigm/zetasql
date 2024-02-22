@@ -305,6 +305,13 @@ ShowStatement [0-15]
 SHOW COMPONENTS
 ==
 
+SHOW GRANTS;
+--
+ShowStatement [0-11]
+  Identifier(GRANTS) [5-11]
+--
+SHOW GRANTS
+==
 
 SHOW TABLE STATUS;
 --
