@@ -169,6 +169,34 @@ GrantStatement [0-30]
 GRANT execute ON t1 TO 'user1'
 ==
 
+grant grant option on t1 to 'user1'
+--
+GrantStatement [0-35]
+  Privileges [6-18]
+    Privilege [6-18]
+      Identifier(`grant option`) [6-18]
+  PathExpression [22-24]
+    Identifier(t1) [22-24]
+  GranteeList [28-35]
+    StringLiteral('user1') [28-35]
+--
+GRANT `grant option` ON t1 TO 'user1'
+==
+
+grant execute on t1 to 'user1' with grant option
+--
+GrantStatement [0-48]
+  Privileges [6-13]
+    Privilege [6-13]
+      Identifier(execute) [6-13]
+  PathExpression [17-19]
+    Identifier(t1) [17-19]
+  GranteeList [23-30]
+    StringLiteral('user1') [23-30]
+--
+GRANT execute ON t1 TO 'user1' WITH GRANT OPTION
+==
+
 grant index on t1 to 'user1'
 --
 GrantStatement [0-28]
@@ -440,6 +468,22 @@ RevokeStatement [0-28]
     StringLiteral('bar') [23-28]
 --
 REVOKE ALL PRIVILEGES ON foo FROM 'bar'
+==
+
+revoke select, grant option on foo from 'bar'
+--
+RevokeStatement [0-45]
+  Privileges [7-27]
+    Privilege [7-13]
+      Identifier(`select`) [7-13]
+    Privilege [15-27]
+      Identifier(`grant option`) [15-27]
+  PathExpression [31-34]
+    Identifier(foo) [31-34]
+  GranteeList [40-45]
+    StringLiteral('bar') [40-45]
+--
+REVOKE `select`, `grant option` ON foo FROM 'bar'
 ==
 
 revoke delete on table foo from 'mdbuser/bar'

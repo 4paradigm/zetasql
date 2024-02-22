@@ -881,6 +881,7 @@ using zetasql::ASTDropStatement;
 %token KW_NUMERIC "NUMERIC"
 %token KW_OFFSET "OFFSET"
 %token KW_ONLY "ONLY"
+%token KW_OPTION "OPTION"
 %token KW_OPTIONS "OPTIONS"
 %token KW_OUT "OUT"
 %token KW_OUTFILE "OUTFILE"
@@ -1420,6 +1421,7 @@ using zetasql::ASTDropStatement;
 %type <boolean> opt_filter
 %type <boolean> opt_if_exists
 %type <boolean> opt_if_not_exists
+%type <boolean> opt_grant_option
 %type <boolean> opt_natural
 %type <boolean> opt_not_aggregate
 %type <boolean> opt_or_replace
@@ -3377,13 +3379,17 @@ export_model_statement:
     ;
 
 grant_statement:
-    "GRANT" privileges "ON" identifier path_expression "TO" grantee_list
+    "GRANT" privileges "ON" identifier path_expression "TO" grantee_list opt_grant_option
       {
-        $$ = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $5, $7});
+        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $5, $7});
+        grant_statement->set_is_with_grant_option($8);
+        $$ = grant_statement;
       }
-    | "GRANT" privileges "ON" path_expression "TO" grantee_list
+    | "GRANT" privileges "ON" path_expression "TO" grantee_list opt_grant_option
       {
-        $$ = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $6});
+        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $6});
+        grant_statement->set_is_with_grant_option($7);
+        $$ = grant_statement;
       }
     ;
 
@@ -3444,7 +3450,6 @@ privilege_name:
       }
     | KW_CREATE
       {
-        // The CREATE keyword is allowed to be a privilege name.
         $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
       }
     | KW_INDEX
@@ -3485,6 +3490,22 @@ privilege_name:
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    | KW_GRANT KW_OPTION
+      {
+        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
+        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    ;
+
+opt_grant_option:
+    "WITH" "GRANT" "OPTION"
+      {
+        $$ = true;
+      }
+    | /* Nothing */
+      {
+        $$ = false;
       }
     ;
 
@@ -7667,6 +7688,7 @@ keyword_as_identifier:
     | "NUMERIC"
     | "OFFSET"
     | "ONLY"
+    | "OPTION"
     | "OPTIONS"
     | "OUT"
     | "OUTFILE"

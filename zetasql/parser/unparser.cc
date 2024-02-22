@@ -2692,6 +2692,9 @@ void Unparser::visitASTGrantStatement(const ASTGrantStatement* node,
   node->target_path()->Accept(this, data);
   print("TO");
   node->grantee_list()->Accept(this, data);
+  if (node->is_with_grant_option()) {
+    print("WITH GRANT OPTION");
+  }
 }
 
 void Unparser::visitASTRevokeStatement(const ASTRevokeStatement* node,
