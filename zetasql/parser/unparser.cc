@@ -2686,8 +2686,8 @@ void Unparser::visitASTGrantStatement(const ASTGrantStatement* node,
   print("GRANT");
   node->privileges()->Accept(this, data);
   print("ON");
-  if (node->target_type() != nullptr) {
-    node->target_type()->Accept(this, data);
+  if (node->object_kind() != SchemaObjectKind::kInvalidSchemaObjectKind) {
+    print(SchemaObjectKindToName(node->object_kind()));
   }
   node->target_path()->Accept(this, data);
   print("TO");
@@ -2702,8 +2702,8 @@ void Unparser::visitASTRevokeStatement(const ASTRevokeStatement* node,
   print("REVOKE");
   node->privileges()->Accept(this, data);
   print("ON");
-  if (node->target_type() != nullptr) {
-    node->target_type()->Accept(this, data);
+  if (node->object_kind() != SchemaObjectKind::kInvalidSchemaObjectKind) {
+    print(SchemaObjectKindToName(node->object_kind()));
   }
   node->target_path()->Accept(this, data);
   print("FROM");

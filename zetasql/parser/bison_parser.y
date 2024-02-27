@@ -1397,6 +1397,7 @@ using zetasql::ASTDropStatement;
 %type <all_or_distinct_keyword> all_or_distinct
 %type <all_or_distinct_keyword> opt_all_or_distinct
 %type <schema_object_kind_keyword> schema_object_kind
+%type <schema_object_kind_keyword> grant_object_kind
 
 %type <not_keyword_presence> between_operator
 %type <not_keyword_presence> in_operator
@@ -3379,9 +3380,10 @@ export_model_statement:
     ;
 
 grant_statement:
-    "GRANT" privileges "ON" identifier path_expression "TO" grantee_list opt_grant_option
+    "GRANT" privileges "ON" grant_object_kind path_expression "TO" grantee_list opt_grant_option
       {
-        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $5, $7});
+        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $5, $7});
+        grant_statement->set_object_kind($4);
         grant_statement->set_is_with_grant_option($8);
         $$ = grant_statement;
       }
@@ -3394,14 +3396,27 @@ grant_statement:
     ;
 
 revoke_statement:
-    "REVOKE" privileges "ON" identifier path_expression "FROM" grantee_list
+    "REVOKE" privileges "ON" grant_object_kind path_expression "FROM" grantee_list
       {
-        $$ = MAKE_NODE(ASTRevokeStatement, @$, {$2, $4, $5, $7});
+        auto revoke_statement = MAKE_NODE(ASTRevokeStatement, @$, {$2, $5, $7});
+        revoke_statement->set_object_kind($4);
+        $$ = revoke_statement;
       }
     | "REVOKE" privileges "ON" path_expression "FROM" grantee_list
       {
         $$ = MAKE_NODE(ASTRevokeStatement, @$, {$2, $4, $6});
       }
+    ;
+
+grant_object_kind:
+    "TABLE"
+      { $$ = zetasql::SchemaObjectKind::kTable; }
+    | "FUNCTION"
+      { $$ = zetasql::SchemaObjectKind::kFunction; }
+    | "DEPLOYMENT"
+      { $$ = zetasql::SchemaObjectKind::kDeployment; }
+    | "VIEW"
+      { $$ = zetasql::SchemaObjectKind::kView; }
     ;
 
 privileges:

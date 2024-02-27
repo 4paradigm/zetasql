@@ -6,13 +6,12 @@ GrantStatement [0-54]
       Identifier(`select`) [6-12]
     Privilege [14-20]
       Identifier(`update`) [14-20]
-  Identifier(table) [24-29]
   PathExpression [30-33]
     Identifier(foo) [30-33]
   GranteeList [37-54]
     StringLiteral('user@google.com') [37-54]
 --
-GRANT `select`, `update` ON table foo TO 'user@google.com'
+GRANT `select`, `update` ON TABLE foo TO 'user@google.com'
 ==
 
 grant alter user on t1 to 'user1'
@@ -277,13 +276,12 @@ GrantStatement [0-54]
       Identifier(`select`) [6-12]
     Privilege [14-20]
       Identifier(delete) [14-20]
-  Identifier(table) [24-29]
   PathExpression [30-33]
     Identifier(foo) [30-33]
   GranteeList [37-54]
     StringLiteral('user@google.com') [37-54]
 --
-GRANT `select`, delete ON table foo TO 'user@google.com'
+GRANT `select`, delete ON TABLE foo TO 'user@google.com'
 ==
 
 grant select, delete on db1.t1 to 'user@google.com'
@@ -311,13 +309,12 @@ GrantStatement [0-54]
       Identifier(`select`) [6-12]
     Privilege [14-20]
       Identifier(`create`) [14-20]
-  Identifier(table) [24-29]
   PathExpression [30-33]
     Identifier(foo) [30-33]
   GranteeList [37-54]
     StringLiteral('user@google.com') [37-54]
 --
-GRANT `select`, `create` ON table foo TO 'user@google.com'
+GRANT `select`, `create` ON TABLE foo TO 'user@google.com'
 ==
 
 grant select, create user on t1 to 'user1'
@@ -340,7 +337,6 @@ grant all privileges on view foo to @user1, @@user2, 'mdbuser/bar1', 'mdbuser/ba
 --
 GrantStatement [0-83]
   Privileges [6-20]
-  Identifier(view) [24-28]
   PathExpression [29-32]
     Identifier(foo) [29-32]
   GranteeList [36-83]
@@ -351,9 +347,8 @@ GrantStatement [0-83]
         Identifier(user2) [46-51]
     StringLiteral('mdbuser/bar1') [53-67]
     StringLiteral('mdbuser/bar2') [69-83]
-
 --
-GRANT ALL PRIVILEGES ON view foo TO @user1, @@user2, 'mdbuser/bar1', 'mdbuser/bar2'
+GRANT ALL PRIVILEGES ON VIEW foo TO @user1, @@user2, 'mdbuser/bar1', 'mdbuser/bar2'
 ==
 
 grant all on datascape.foo to 'bar'
@@ -395,18 +390,9 @@ GRANT `select`, insert(col1, col2, col3), `update`(col2) ON foo TO 'mdbgroup/bar
 
 grant execute on script datascape.script_foo to 'group@google.com'
 --
-GrantStatement [0-66]
-  Privileges [6-13]
-    Privilege [6-13]
-      Identifier(execute) [6-13]
-  Identifier(script) [17-23]
-  PathExpression [24-44]
-    Identifier(datascape) [24-33]
-    Identifier(script_foo) [34-44]
-  GranteeList [48-66]
-    StringLiteral('group@google.com') [48-66]
---
-GRANT execute ON script datascape.script_foo TO 'group@google.com'
+ERROR: Syntax error: Expected "." or keyword TO but got identifier "datascape" [at 1:25]
+grant execute on script datascape.script_foo to 'group@google.com'
+                        ^
 ==
 
 grant on foo to 'bar'
@@ -492,20 +478,18 @@ RevokeStatement [0-45]
   Privileges [7-13]
     Privilege [7-13]
       Identifier(delete) [7-13]
-  Identifier(table) [17-22]
   PathExpression [23-26]
     Identifier(foo) [23-26]
   GranteeList [32-45]
     StringLiteral('mdbuser/bar') [32-45]
 --
-REVOKE delete ON table foo FROM 'mdbuser/bar'
+REVOKE delete ON TABLE foo FROM 'mdbuser/bar'
 ==
 
 revoke all on table table from 'mdbuser/user', @user2, 'user3', @@user4;
 --
 RevokeStatement [0-71]
   Privileges [7-10]
-  Identifier(table) [14-19]
   PathExpression [20-25]
     Identifier(table) [20-25]
   GranteeList [31-71]
@@ -517,7 +501,7 @@ RevokeStatement [0-71]
       PathExpression [66-71]
         Identifier(user4) [66-71]
 --
-REVOKE ALL PRIVILEGES ON table table FROM 'mdbuser/user', @user2, 'user3', @@user4
+REVOKE ALL PRIVILEGES ON TABLE table FROM 'mdbuser/user', @user2, 'user3', @@user4
 ==
 
 revoke delete,update(col2) on view foo from 'mdbgroup/bar'
@@ -530,13 +514,12 @@ RevokeStatement [0-58]
       Identifier(`update`) [14-20]
       ColumnList [20-26]
         Identifier(col2) [21-25]
-  Identifier(view) [30-34]
   PathExpression [35-38]
     Identifier(foo) [35-38]
   GranteeList [44-58]
     StringLiteral('mdbgroup/bar') [44-58]
 --
-REVOKE delete, `update`(col2) ON view foo FROM 'mdbgroup/bar'
+REVOKE delete, `update`(col2) ON VIEW foo FROM 'mdbgroup/bar'
 ==
 
 revoke all on view foo to 'mdbgroup/bar'
