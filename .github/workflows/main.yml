@@ -107,12 +107,28 @@ jobs:
           name: release-artifacts
 
   macos-build:
-    runs-on: macos-latest
+    runs-on: macos-12
     timeout-minutes: 120
     env:
       bazel_version: '3.7.2'
     steps:
       - uses: actions/checkout@v3
+
+      # xcode 14.0.1 comes with macOS SDK 12.3, ref https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md#installed-sdks
+      # so pre-compile zetasql requires macOS >= 12.3
+      - name: Xcode Select Version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '14.0.1'
+
+      # https://github.com/actions/runner-images/issues/8952#issuecomment-1910396143
+      - name: Setup Android SDK 27, 28, 29 and 30
+        uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: 9123335
+      - name: Setup Android SDK via sdkmanager
+        run: |
+          sdkmanager tools "platforms;android-27" "platforms;android-28" "platforms;android-29" "platforms;android-30"
 
       - name: update bazel version
         run: echo ${{ env.bazel_version }} > .bazelversion
@@ -147,6 +163,11 @@ jobs:
           ./pack_zetasql.sh
         env:
           TAG: ${{ env.TAG }}
+
+      - name: verbose build info
+        # checkout the 'minos' and 'sdk' info
+        run: |
+          otool -l $(echo libzetasql-*/)/lib/libicudata.a | grep -A 20 LC_BUILD_VERSION
 
       - name: Upload Artifacts
         if: ${{ github.event_name == 'push' }}
