@@ -1037,6 +1037,7 @@ using zetasql::ASTDropStatement;
 %type <expression> expression
 %type <node> generic_entity_type
 %type <node> grant_to_clause
+%type <node> grant_path
 %type <node> index_storing_expression_list_prefix
 %type <node> index_storing_expression_list
 %type <expression> interval_expression
@@ -1112,6 +1113,7 @@ using zetasql::ASTDropStatement;
 %type <node> path_expression_list
 %type <node> path_expression_list_with_opt_parens
 %type <node> set_statement
+%type <node> star_or_identifier
 %type <node> index_order_by
 %type <node> index_order_by_prefix
 %type <node> index_storing_list
@@ -3380,14 +3382,14 @@ export_model_statement:
     ;
 
 grant_statement:
-    "GRANT" privileges "ON" grant_object_kind path_expression "TO" grantee_list opt_grant_option
+    "GRANT" privileges "ON" grant_object_kind grant_path "TO" grantee_list opt_grant_option
       {
         auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $5, $7});
         grant_statement->set_object_kind($4);
         grant_statement->set_is_with_grant_option($8);
         $$ = grant_statement;
       }
-    | "GRANT" privileges "ON" path_expression "TO" grantee_list opt_grant_option
+    | "GRANT" privileges "ON" grant_path "TO" grantee_list opt_grant_option
       {
         auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $6});
         grant_statement->set_is_with_grant_option($7);
@@ -3396,13 +3398,13 @@ grant_statement:
     ;
 
 revoke_statement:
-    "REVOKE" privileges "ON" grant_object_kind path_expression "FROM" grantee_list
+    "REVOKE" privileges "ON" grant_object_kind grant_path "FROM" grantee_list
       {
         auto revoke_statement = MAKE_NODE(ASTRevokeStatement, @$, {$2, $5, $7});
         revoke_statement->set_object_kind($4);
         $$ = revoke_statement;
       }
-    | "REVOKE" privileges "ON" path_expression "FROM" grantee_list
+    | "REVOKE" privileges "ON" grant_path "FROM" grantee_list
       {
         $$ = MAKE_NODE(ASTRevokeStatement, @$, {$2, $4, $6});
       }
@@ -3510,6 +3512,38 @@ privilege_name:
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
+      }
+    ;
+
+star_or_identifier:
+    "*"
+      {
+        auto node = MAKE_NODE(ASTStarOrIdentifier, @$);
+        node->set_is_star(true);
+        $$ = node;
+      }
+    | identifier
+      {
+        $$ = MAKE_NODE(ASTStarOrIdentifier, @$, {$1});
+      }
+    ;
+
+grant_path:
+    star_or_identifier
+      {
+        $$ = MAKE_NODE(ASTGrantPath, @$, {$1});
+      }
+    | star_or_identifier ".*"
+      {
+        auto node = MAKE_NODE(ASTGrantPath, @$, {$1});
+        auto id = MAKE_NODE(ASTStarOrIdentifier, @$);
+        id->set_is_star(true);
+        node->AddChildren({id});
+        $$ = WithLocation(node, @$);
+      }
+    | grant_path "." star_or_identifier
+      {
+        $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
       }
     ;
 

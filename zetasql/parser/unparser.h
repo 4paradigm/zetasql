@@ -217,6 +217,8 @@ class Unparser : public ParseTreeVisitor {
                                  void* data) override;
   void visitASTStartBatchStatement(const ASTStartBatchStatement* node,
                                    void* data) override;
+  void visitASTStarOrIdentifier(const ASTStarOrIdentifier* node,
+                                   void* data) override;
   void visitASTRunBatchStatement(const ASTRunBatchStatement* node,
                                  void* data) override;
   void visitASTAbortBatchStatement(const ASTAbortBatchStatement* node,
@@ -513,6 +515,7 @@ class Unparser : public ParseTreeVisitor {
   void visitASTGranteeList(const ASTGranteeList* node, void* data) override;
   void visitASTGrantStatement(const ASTGrantStatement* node,
                               void* data) override;
+  void visitASTGrantPath(const ASTGrantPath* node, void* data) override;
   void visitASTRevokeStatement(const ASTRevokeStatement* node,
                                void* data) override;
 

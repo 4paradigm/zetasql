@@ -2710,6 +2710,19 @@ void Unparser::visitASTRevokeStatement(const ASTRevokeStatement* node,
   node->grantee_list()->Accept(this, data);
 }
 
+void Unparser::visitASTStarOrIdentifier(const ASTStarOrIdentifier* node, void* data) {
+  if (node->is_star()) {
+    print("*");
+  }
+  if (node->value()) {
+    node->value()->Accept(this, data);
+  }
+}
+
+void Unparser::visitASTGrantPath(const ASTGrantPath* node, void* data) {
+  UnparseChildrenWithSeparator(node, data, ".");
+}
+
 void Unparser::visitASTRepeatableClause(const ASTRepeatableClause* node,
                                         void* data) {
   print("REPEATABLE (");
