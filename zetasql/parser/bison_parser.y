@@ -3460,55 +3460,55 @@ privilege_name:
       {
         $$ = $1;
       }
-    | KW_SELECT
+    | "SELECT"
       {
         // The SELECT keyword is allowed to be a privilege name.
         $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
       }
-    | KW_CREATE
+    | "CREATE"
       {
         $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
       }
-    | KW_INDEX
+    | "INDEX"
       {
         $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
       }
-    | KW_ALTER KW_USER
+    | "ALTER" "USER"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
-    | KW_CREATE KW_USER
+    | "CREATE" "USER"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
-    | KW_CREATE KW_ROLE
+    | "CREATE" "ROLE"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
-    | KW_DROP "DEPLOYMENT"
+    | "DROP" "DEPLOYMENT"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
-    | KW_DROP KW_USER
+    | "DROP" "USER"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
-    | KW_DROP KW_ROLE
+    | "DROP" "ROLE"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
-    | KW_SHOW KW_DATABASES
+    | "SHOW" "DATABASES"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
       }
-    | KW_GRANT KW_OPTION
+    | "GRANT" "OPTION"
       {
         std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
         $$ = parser->MakeIdentifier(@$, identifier.c_str());
