@@ -6896,7 +6896,7 @@ class ASTRevokeStatement final : public ASTStatement {
       NonRecursiveParseTreeVisitor* visitor) const override;
 
   const ASTPrivileges* privileges() const { return privileges_; }
-  const ASTGrantPath* target_path() const { return target_path_; }
+  const ASTPathExpression* target_path() const { return target_path_; }
   const ASTGranteeList* grantee_list() const { return grantee_list_; }
   const SchemaObjectKind object_kind() const {
     return object_kind_;
@@ -6916,7 +6916,7 @@ class ASTRevokeStatement final : public ASTStatement {
   const ASTPrivileges* privileges_ = nullptr;
   SchemaObjectKind object_kind_ =
       SchemaObjectKind::kInvalidSchemaObjectKind;
-  const ASTGrantPath* target_path_ = nullptr;
+  const ASTPathExpression* target_path_ = nullptr;
   const ASTGranteeList* grantee_list_ = nullptr;
 };
 
