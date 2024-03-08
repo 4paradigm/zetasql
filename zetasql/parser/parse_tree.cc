@@ -189,7 +189,6 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_GRANTEE_LIST] = "GranteeList";
   map[AST_GRANT_TO_CLAUSE] = "GrantToClause";
   map[AST_GRANT_STATEMENT] = "GrantStatement";
-  map[AST_GRANT_PATH] = "GrantPath";
   map[AST_GROUP_BY] = "GroupBy";
   map[AST_GROUPING_ITEM] = "GroupingItem";
   map[AST_HAVING_MODIFIER] = "HavingModifier";

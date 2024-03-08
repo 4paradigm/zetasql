@@ -2710,10 +2710,6 @@ void Unparser::visitASTRevokeStatement(const ASTRevokeStatement* node,
   node->grantee_list()->Accept(this, data);
 }
 
-void Unparser::visitASTGrantPath(const ASTGrantPath* node, void* data) {
-  UnparseChildrenWithSeparator(node, data, ".");
-}
-
 void Unparser::visitASTRepeatableClause(const ASTRepeatableClause* node,
                                         void* data) {
   print("REPEATABLE (");

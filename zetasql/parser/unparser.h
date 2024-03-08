@@ -513,7 +513,6 @@ class Unparser : public ParseTreeVisitor {
   void visitASTGranteeList(const ASTGranteeList* node, void* data) override;
   void visitASTGrantStatement(const ASTGrantStatement* node,
                               void* data) override;
-  void visitASTGrantPath(const ASTGrantPath* node, void* data) override;
   void visitASTRevokeStatement(const ASTRevokeStatement* node,
                                void* data) override;
 

@@ -6805,26 +6805,6 @@ class ASTPrivileges final : public ASTNode {
   absl::Span<const ASTPrivilege* const> privileges_;
 };
 
-class ASTGrantPath final : public ASTNode {
- public:
-  static constexpr ASTNodeKind kConcreteNodeKind = AST_GRANT_PATH;
-
-  ASTGrantPath() : ASTNode(kConcreteNodeKind) {}
-  void Accept(ParseTreeVisitor* visitor, void* data) const override;
-  zetasql_base::StatusOr<VisitResult> Accept(
-      NonRecursiveParseTreeVisitor* visitor) const override;
-  const absl::Span<const ASTIdentifier* const>& names() const {
-       return names_;
-  }
-
- private:
-  void InitFields() final {
-    FieldLoader fl(this);
-    fl.AddRestAsRepeated(&names_);
-  }
-  absl::Span<const ASTIdentifier* const> names_;
-};
-
 class ASTGranteeList final : public ASTNode {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_GRANTEE_LIST;

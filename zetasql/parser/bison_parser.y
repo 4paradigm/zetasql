@@ -1037,7 +1037,7 @@ using zetasql::ASTDropStatement;
 %type <expression> expression
 %type <node> generic_entity_type
 %type <node> grant_to_clause
-%type <node> grant_path
+%type <expression> grant_path
 %type <node> index_storing_expression_list_prefix
 %type <node> index_storing_expression_list
 %type <expression> interval_expression
@@ -3384,22 +3384,14 @@ export_model_statement:
 grant_statement:
     "GRANT" privileges "ON" grant_object_kind grant_path "TO" grantee_list opt_grant_option
       {
-        auto path_expression = MAKE_NODE(ASTPathExpression, @$, {});
-        for (int i = 0; i < ($5)->num_children(); i++) {
-          path_expression->AddChild(($5)->mutable_child(i));
-        }
-        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, path_expression, $7});
+        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $5, $7});
         grant_statement->set_object_kind($4);
         grant_statement->set_is_with_grant_option($8);
         $$ = grant_statement;
       }
     | "GRANT" privileges "ON" grant_path "TO" grantee_list opt_grant_option
       {
-        auto path_expression = MAKE_NODE(ASTPathExpression, @$, {});
-        for (int i = 0; i < ($4)->num_children(); i++) {
-          path_expression->AddChild(($4)->mutable_child(i));
-        }
-        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, path_expression, $6});
+        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $6});
         grant_statement->set_is_with_grant_option($7);
         $$ = grant_statement;
       }
@@ -3408,21 +3400,13 @@ grant_statement:
 revoke_statement:
     "REVOKE" privileges "ON" grant_object_kind grant_path "FROM" grantee_list
       {
-        auto path_expression = MAKE_NODE(ASTPathExpression, @$, {});
-        for (int i = 0; i < ($5)->num_children(); i++) {
-          path_expression->AddChild(($5)->mutable_child(i));
-        }
-        auto revoke_statement = MAKE_NODE(ASTRevokeStatement, @$, {$2, path_expression, $7});
+        auto revoke_statement = MAKE_NODE(ASTRevokeStatement, @$, {$2, $5, $7});
         revoke_statement->set_object_kind($4);
         $$ = revoke_statement;
       }
     | "REVOKE" privileges "ON" grant_path "FROM" grantee_list
       {
-        auto path_expression = MAKE_NODE(ASTPathExpression, @$, {});
-        for (int i = 0; i < ($4)->num_children(); i++) {
-          path_expression->AddChild(($4)->mutable_child(i));
-        }
-        $$ = MAKE_NODE(ASTRevokeStatement, @$, {$2, path_expression, $6});
+        $$ = MAKE_NODE(ASTRevokeStatement, @$, {$2, $4, $6});
       }
     ;
 
@@ -3545,14 +3529,14 @@ star_or_identifier:
 grant_path:
     star_or_identifier
       {
-        $$ = MAKE_NODE(ASTGrantPath, @$, {$1});
+        $$ = MAKE_NODE(ASTPathExpression, @$, {$1});
       }
     | star_or_identifier ".*"
       {
-        auto node = MAKE_NODE(ASTGrantPath, @$, {$1});
+        auto path_expression = MAKE_NODE(ASTPathExpression, @$, {$1});
         auto id = parser->MakeIdentifier(@2, "*");
-        node->AddChildren({id});
-        $$ = WithLocation(node, @$);
+        path_expression->AddChild(id);
+        $$ = path_expression;
       }
     | grant_path "." star_or_identifier
       {
