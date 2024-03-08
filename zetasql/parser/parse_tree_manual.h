@@ -6805,27 +6805,6 @@ class ASTPrivileges final : public ASTNode {
   absl::Span<const ASTPrivilege* const> privileges_;
 };
 
-class ASTStarOrIdentifier final : public ASTNode {
- public:
-  static constexpr ASTNodeKind kConcreteNodeKind = AST_STAR_OR_IDENTIFIER;
-
-  ASTStarOrIdentifier() : ASTNode(kConcreteNodeKind) {}
-  void Accept(ParseTreeVisitor* visitor, void* data) const override;
-  zetasql_base::StatusOr<VisitResult> Accept(
-      NonRecursiveParseTreeVisitor* visitor) const override;
-  bool is_star() const { return is_star_; }
-  void set_is_star(bool is_star) { is_star_ = is_star; }
-  const ASTIdentifier* value() const { return value_; }
-
- private:
-  void InitFields() final {
-    FieldLoader fl(this);
-    fl.AddOptional(&value_, AST_IDENTIFIER);
-  }
-  bool is_star_ = false;
-  const ASTIdentifier* value_ = nullptr;
-};
-
 class ASTGrantPath final : public ASTNode {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_GRANT_PATH;
@@ -6834,7 +6813,7 @@ class ASTGrantPath final : public ASTNode {
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
-  const absl::Span<const ASTStarOrIdentifier* const>& names() const {
+  const absl::Span<const ASTIdentifier* const>& names() const {
        return names_;
   }
 
@@ -6843,7 +6822,7 @@ class ASTGrantPath final : public ASTNode {
     FieldLoader fl(this);
     fl.AddRestAsRepeated(&names_);
   }
-  absl::Span<const ASTStarOrIdentifier* const> names_;
+  absl::Span<const ASTIdentifier* const> names_;
 };
 
 class ASTGranteeList final : public ASTNode {
@@ -6880,7 +6859,7 @@ class ASTGrantStatement final : public ASTStatement {
       NonRecursiveParseTreeVisitor* visitor) const override;
 
   const ASTPrivileges* privileges() const { return privileges_; }
-  const ASTGrantPath* target_path() const { return target_path_; }
+  const ASTPathExpression* target_path() const { return target_path_; }
   const ASTGranteeList* grantee_list() const { return grantee_list_; }
   bool is_with_grant_option() const { return is_with_grant_option_; }
   void set_is_with_grant_option(bool value) { is_with_grant_option_ = value; }
@@ -6902,7 +6881,7 @@ class ASTGrantStatement final : public ASTStatement {
   const ASTPrivileges* privileges_ = nullptr;       // Required
   SchemaObjectKind object_kind_ =
       SchemaObjectKind::kInvalidSchemaObjectKind;
-  const ASTGrantPath* target_path_ = nullptr;  // Required
+  const ASTPathExpression* target_path_ = nullptr;  // Required
   const ASTGranteeList* grantee_list_ = nullptr;    // Required
   bool is_with_grant_option_ = false;
 };

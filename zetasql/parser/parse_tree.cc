@@ -297,7 +297,6 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_SQL_FUNCTION_BODY] = "SqlFunctionBody";
   map[AST_STAR_EXCEPT_LIST] = "StarExceptList";
   map[AST_STAR_MODIFIERS] = "StarModifiers";
-  map[AST_STAR_OR_IDENTIFIER] = "StarOrIdentifier";
   map[AST_STAR_REPLACE_ITEM] = "StarReplaceItem";
   map[AST_STAR_WITH_MODIFIERS] = "StarWithModifiers";
   map[AST_STAR] = "Star";
