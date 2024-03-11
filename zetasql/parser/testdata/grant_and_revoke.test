@@ -444,15 +444,15 @@ GrantStatement [0-77]
 GRANT `select`, insert(col1, col2, col3), `update`(col2) ON foo TO 'mdbgroup/bar'
 ==
 
-grant all on db1.* to 'bar'
+grant all on db1. * to 'bar'
 --
-GrantStatement [0-27]
+GrantStatement [0-28]
   Privileges [6-9]
-  PathExpression [13-18]
+  PathExpression [13-19]
     Identifier(db1) [13-16]
-    Identifier(`*`) [17-18]
-  GranteeList [22-27]
-    StringLiteral('bar') [22-27]
+    Identifier(`*`) [18-19]
+  GranteeList [23-28]
+    StringLiteral('bar') [23-28]
 --
 GRANT ALL PRIVILEGES ON db1.`*` TO 'bar'
 ==

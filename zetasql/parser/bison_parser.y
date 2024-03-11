@@ -3403,7 +3403,8 @@ path_expression_with_asterisk:
     {
         auto* id = parser->MakeIdentifier(@2, "*");
         auto location = parser->GetBisonLocation(id->GetParseLocationRange());
-        location.begin += 1;
+        // extra space allowed between DOT and STAR
+        location.begin = location.end - 1;
         id = WithStartLocation(id, location);
         auto* extended_path = WithEndLocation(WithExtraChildren($1, {id}), @2);
         $$ = extended_path;
@@ -3418,7 +3419,8 @@ path_expression_with_asterisk:
         auto* id1 = parser->MakeIdentifier(@1, parser->GetInputText(@1));
         auto* id2 = parser->MakeIdentifier(@2, "*");
         auto location = parser->GetBisonLocation(id2->GetParseLocationRange());
-        location.begin += 1;
+        // extra space allowed between DOT and STAR
+        location.begin = location.end - 1;
         id2 = WithStartLocation(id2, location);
         $$ = MAKE_NODE(ASTPathExpression, @$, {id1, id2});
     }
