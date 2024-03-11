@@ -2686,13 +2686,13 @@ void Unparser::visitASTGrantStatement(const ASTGrantStatement* node,
   print("GRANT");
   node->privileges()->Accept(this, data);
   print("ON");
-  if (node->object_kind() != SchemaObjectKind::kInvalidSchemaObjectKind) {
-    print(SchemaObjectKindToName(node->object_kind()));
+  if (node->target_type() != nullptr) {
+    node->target_type()->Accept(this, data);
   }
   node->target_path()->Accept(this, data);
   print("TO");
   node->grantee_list()->Accept(this, data);
-  if (node->is_with_grant_option()) {
+  if (node->with_grant_option()) {
     print("WITH GRANT OPTION");
   }
 }
@@ -2702,8 +2702,8 @@ void Unparser::visitASTRevokeStatement(const ASTRevokeStatement* node,
   print("REVOKE");
   node->privileges()->Accept(this, data);
   print("ON");
-  if (node->object_kind() != SchemaObjectKind::kInvalidSchemaObjectKind) {
-    print(SchemaObjectKindToName(node->object_kind()));
+  if (node->target_type() != nullptr) {
+    node->target_type()->Accept(this, data);
   }
   node->target_path()->Accept(this, data);
   print("FROM");

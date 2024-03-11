@@ -1037,7 +1037,6 @@ using zetasql::ASTDropStatement;
 %type <expression> expression
 %type <node> generic_entity_type
 %type <node> grant_to_clause
-%type <expression> grant_path
 %type <node> index_storing_expression_list_prefix
 %type <node> index_storing_expression_list
 %type <expression> interval_expression
@@ -1082,7 +1081,6 @@ using zetasql::ASTDropStatement;
 %type <node> hint_with_body_prefix
 %type <identifier> identifier
 %type <identifier> identifier_in_hints
-%type <identifier> star_or_identifier
 %type <node> if_statement
 %type <node> elseif_clauses
 %type <node> execute_immediate
@@ -1260,6 +1258,7 @@ using zetasql::ASTDropStatement;
 %type <node> partition_by_clause_prefix
 %type <node> partition_by_clause_prefix_no_hint
 %type <expression> path_expression
+%type <expression> path_expression_with_asterisk
 %type <dashed_identifier> dashed_identifier
 %type <expression> dashed_path_expression
 %type <expression> maybe_dashed_path_expression
@@ -1399,7 +1398,6 @@ using zetasql::ASTDropStatement;
 %type <all_or_distinct_keyword> all_or_distinct
 %type <all_or_distinct_keyword> opt_all_or_distinct
 %type <schema_object_kind_keyword> schema_object_kind
-%type <schema_object_kind_keyword> grant_object_kind
 
 %type <not_keyword_presence> between_operator
 %type <not_keyword_presence> in_operator
@@ -3382,43 +3380,60 @@ export_model_statement:
     ;
 
 grant_statement:
-    "GRANT" privileges "ON" grant_object_kind grant_path "TO" grantee_list opt_grant_option
+    "GRANT" privileges "ON" identifier path_expression_with_asterisk "TO" grantee_list opt_grant_option
       {
-        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $5, $7});
-        grant_statement->set_object_kind($4);
-        grant_statement->set_is_with_grant_option($8);
-        $$ = grant_statement;
+        auto* grant = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $5, $7});
+        grant->set_with_grant_option($8);
+        $$ = grant;
       }
-    | "GRANT" privileges "ON" grant_path "TO" grantee_list opt_grant_option
+    | "GRANT" privileges "ON" path_expression_with_asterisk "TO" grantee_list opt_grant_option
       {
-        auto grant_statement = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $6});
-        grant_statement->set_is_with_grant_option($7);
-        $$ = grant_statement;
+        auto* grant = MAKE_NODE(ASTGrantStatement, @$, {$2, $4, $6});
+        grant->set_with_grant_option($7);
+        $$ = grant;
       }
     ;
 
+path_expression_with_asterisk:
+    path_expression
+    {
+      $$ = $1;
+    }
+    | path_expression ".*"
+    {
+        auto* id = parser->MakeIdentifier(@2, "*");
+        auto location = parser->GetBisonLocation(id->GetParseLocationRange());
+        location.begin += 1;
+        id = WithStartLocation(id, location);
+        auto* extended_path = WithEndLocation(WithExtraChildren($1, {id}), @2);
+        $$ = extended_path;
+    }
+    | "*"
+    {
+        auto* id = parser->MakeIdentifier(@1, parser->GetInputText(@1));
+        $$ = MAKE_NODE(ASTPathExpression, @1, {id});
+    }
+    | "*" ".*"
+    {
+        auto* id1 = parser->MakeIdentifier(@1, parser->GetInputText(@1));
+        auto* id2 = parser->MakeIdentifier(@2, "*");
+        auto location = parser->GetBisonLocation(id2->GetParseLocationRange());
+        location.begin += 1;
+        id2 = WithStartLocation(id2, location);
+        $$ = MAKE_NODE(ASTPathExpression, @$, {id1, id2});
+    }
+    ;
+
+
 revoke_statement:
-    "REVOKE" privileges "ON" grant_object_kind grant_path "FROM" grantee_list
+    "REVOKE" privileges "ON" identifier path_expression_with_asterisk "FROM" grantee_list
       {
-        auto revoke_statement = MAKE_NODE(ASTRevokeStatement, @$, {$2, $5, $7});
-        revoke_statement->set_object_kind($4);
-        $$ = revoke_statement;
+        $$ = MAKE_NODE(ASTRevokeStatement, @$, {$2, $4, $5, $7});
       }
-    | "REVOKE" privileges "ON" grant_path "FROM" grantee_list
+    | "REVOKE" privileges "ON" path_expression_with_asterisk "FROM" grantee_list
       {
         $$ = MAKE_NODE(ASTRevokeStatement, @$, {$2, $4, $6});
       }
-    ;
-
-grant_object_kind:
-    "TABLE"
-      { $$ = zetasql::SchemaObjectKind::kTable; }
-    | "FUNCTION"
-      { $$ = zetasql::SchemaObjectKind::kFunction; }
-    | "DEPLOYMENT"
-      { $$ = zetasql::SchemaObjectKind::kDeployment; }
-    | "VIEW"
-      { $$ = zetasql::SchemaObjectKind::kView; }
     ;
 
 privileges:
@@ -3475,72 +3490,35 @@ privilege_name:
       }
     | "ALTER" "USER"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+        $$ = parser->MakeIdentifier(@$, "ALTER USER");
       }
     | "CREATE" "USER"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+        $$ = parser->MakeIdentifier(@$, "CREATE USER");
       }
     | "CREATE" "ROLE"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+        $$ = parser->MakeIdentifier(@$, "CREATE ROLE");
       }
     | "DROP" "DEPLOYMENT"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+        $$ = parser->MakeIdentifier(@$, "DROP DEPLOYMENT");
       }
     | "DROP" "USER"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+        $$ = parser->MakeIdentifier(@$, "DROP USER");
       }
     | "DROP" "ROLE"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+        $$ = parser->MakeIdentifier(@$, "DROP ROLE");
       }
     | "SHOW" "DATABASES"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
+        $$ = parser->MakeIdentifier(@$, "SHOW DATABASES");
       }
     | "GRANT" "OPTION"
       {
-        std::string identifier = absl::StrCat(parser->GetInputText(@1), " ", parser->GetInputText(@2));
-        $$ = parser->MakeIdentifier(@$, identifier.c_str());
-      }
-    ;
-
-star_or_identifier:
-    "*"
-      {
-        $$ = parser->MakeIdentifier(@1, parser->GetInputText(@1));
-      }
-    | identifier
-      {
-        $$ = $1;
-      }
-    ;
-
-grant_path:
-    star_or_identifier
-      {
-        $$ = MAKE_NODE(ASTPathExpression, @$, {$1});
-      }
-    | star_or_identifier ".*"
-      {
-        auto path_expression = MAKE_NODE(ASTPathExpression, @$, {$1});
-        auto id = parser->MakeIdentifier(@2, "*");
-        path_expression->AddChild(id);
-        $$ = path_expression;
-      }
-    | grant_path "." star_or_identifier
-      {
-        $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
+        $$ = parser->MakeIdentifier(@$, "GRANT OPTION");
       }
     ;
 

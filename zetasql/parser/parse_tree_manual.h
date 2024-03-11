@@ -6839,31 +6839,27 @@ class ASTGrantStatement final : public ASTStatement {
       NonRecursiveParseTreeVisitor* visitor) const override;
 
   const ASTPrivileges* privileges() const { return privileges_; }
+  const ASTIdentifier* target_type() const { return target_type_; }
   const ASTPathExpression* target_path() const { return target_path_; }
   const ASTGranteeList* grantee_list() const { return grantee_list_; }
-  bool is_with_grant_option() const { return is_with_grant_option_; }
-  void set_is_with_grant_option(bool value) { is_with_grant_option_ = value; }
-  const SchemaObjectKind object_kind() const {
-    return object_kind_;
-  }
-  void set_object_kind(SchemaObjectKind object_kind) {
-    object_kind_ = object_kind;
-  }
+
+  bool with_grant_option() const { return with_grant_option_; }
+  void set_with_grant_option(bool value) { with_grant_option_ = value; }
 
  private:
   void InitFields() final {
     FieldLoader fl(this);
     fl.AddRequired(&privileges_);
+    fl.AddOptional(&target_type_, AST_IDENTIFIER);
     fl.AddRequired(&target_path_);
     fl.AddRequired(&grantee_list_);
   }
 
   const ASTPrivileges* privileges_ = nullptr;       // Required
-  SchemaObjectKind object_kind_ =
-      SchemaObjectKind::kInvalidSchemaObjectKind;
+  const ASTIdentifier* target_type_ = nullptr;      // Optional
   const ASTPathExpression* target_path_ = nullptr;  // Required
   const ASTGranteeList* grantee_list_ = nullptr;    // Required
-  bool is_with_grant_option_ = false;
+  bool with_grant_option_ = false;
 };
 
 class ASTRevokeStatement final : public ASTStatement {
@@ -6876,26 +6872,21 @@ class ASTRevokeStatement final : public ASTStatement {
       NonRecursiveParseTreeVisitor* visitor) const override;
 
   const ASTPrivileges* privileges() const { return privileges_; }
+  const ASTIdentifier* target_type() const { return target_type_; }
   const ASTPathExpression* target_path() const { return target_path_; }
   const ASTGranteeList* grantee_list() const { return grantee_list_; }
-  const SchemaObjectKind object_kind() const {
-    return object_kind_;
-  }
-  void set_object_kind(SchemaObjectKind object_kind) {
-    object_kind_ = object_kind;
-  }
 
  private:
   void InitFields() final {
     FieldLoader fl(this);
     fl.AddRequired(&privileges_);
+    fl.AddOptional(&target_type_, AST_IDENTIFIER);
     fl.AddRequired(&target_path_);
     fl.AddRequired(&grantee_list_);
   }
 
   const ASTPrivileges* privileges_ = nullptr;
-  SchemaObjectKind object_kind_ =
-      SchemaObjectKind::kInvalidSchemaObjectKind;
+  const ASTIdentifier* target_type_ = nullptr;
   const ASTPathExpression* target_path_ = nullptr;
   const ASTGranteeList* grantee_list_ = nullptr;
 };

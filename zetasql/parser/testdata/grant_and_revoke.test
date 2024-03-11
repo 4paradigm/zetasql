@@ -3,13 +3,13 @@ grant alter user on t1 to 'user1'
 GrantStatement [0-33]
   Privileges [6-16]
     Privilege [6-16]
-      Identifier(`alter user`) [6-16]
+      Identifier(`ALTER USER`) [6-16]
   PathExpression [20-22]
     Identifier(t1) [20-22]
   GranteeList [26-33]
     StringLiteral('user1') [26-33]
 --
-GRANT `alter user` ON t1 TO 'user1'
+GRANT `ALTER USER` ON t1 TO 'user1'
 ==
 
 grant alter user on * to 'user1'
@@ -17,13 +17,13 @@ grant alter user on * to 'user1'
 GrantStatement [0-32]
   Privileges [6-16]
     Privilege [6-16]
-      Identifier(`alter user`) [6-16]
+      Identifier(`ALTER USER`) [6-16]
   PathExpression [20-21]
     Identifier(`*`) [20-21]
   GranteeList [25-32]
     StringLiteral('user1') [25-32]
 --
-GRANT `alter user` ON `*` TO 'user1'
+GRANT `ALTER USER` ON `*` TO 'user1'
 ==
 
 grant alter user on db1.t1 to 'user1'
@@ -31,14 +31,14 @@ grant alter user on db1.t1 to 'user1'
 GrantStatement [0-37]
   Privileges [6-16]
     Privilege [6-16]
-      Identifier(`alter user`) [6-16]
+      Identifier(`ALTER USER`) [6-16]
   PathExpression [20-26]
     Identifier(db1) [20-23]
     Identifier(t1) [24-26]
   GranteeList [30-37]
     StringLiteral('user1') [30-37]
 --
-GRANT `alter user` ON db1.t1 TO 'user1'
+GRANT `ALTER USER` ON db1.t1 TO 'user1'
 ==
 
 grant alter user on db1.* to 'user1'
@@ -46,29 +46,21 @@ grant alter user on db1.* to 'user1'
 GrantStatement [0-36]
   Privileges [6-16]
     Privilege [6-16]
-      Identifier(`alter user`) [6-16]
+      Identifier(`ALTER USER`) [6-16]
   PathExpression [20-25]
     Identifier(db1) [20-23]
-    Identifier(`*`) [23-25]
+    Identifier(`*`) [24-25]
   GranteeList [29-36]
     StringLiteral('user1') [29-36]
 --
-GRANT `alter user` ON db1.`*` TO 'user1'
+GRANT `ALTER USER` ON db1.`*` TO 'user1'
 ==
 
 grant alter user on *.t1 to 'user1'
 --
-GrantStatement [0-35]
-  Privileges [6-16]
-    Privilege [6-16]
-      Identifier(`alter user`) [6-16]
-  PathExpression [20-24]
-    Identifier(`*`) [20-21]
-    Identifier(t1) [22-24]
-  GranteeList [28-35]
-    StringLiteral('user1') [28-35]
---
-GRANT `alter user` ON `*`.t1 TO 'user1'
+ERROR: Syntax error: Expected keyword TO but got "." [at 1:22]
+grant alter user on *.t1 to 'user1'
+                     ^
 ==
 
 grant select, update on table foo to 'user@google.com'
@@ -79,12 +71,13 @@ GrantStatement [0-54]
       Identifier(`select`) [6-12]
     Privilege [14-20]
       Identifier(`update`) [14-20]
+  Identifier(table) [24-29]
   PathExpression [30-33]
     Identifier(foo) [30-33]
   GranteeList [37-54]
     StringLiteral('user@google.com') [37-54]
 --
-GRANT `select`, `update` ON TABLE foo TO 'user@google.com'
+GRANT `select`, `update` ON table foo TO 'user@google.com'
 ==
 
 grant create on t1 to 'user1'
@@ -106,13 +99,13 @@ grant create user on t1 to 'user1'
 GrantStatement [0-34]
   Privileges [6-17]
     Privilege [6-17]
-      Identifier(`create user`) [6-17]
+      Identifier(`CREATE USER`) [6-17]
   PathExpression [21-23]
     Identifier(t1) [21-23]
   GranteeList [27-34]
     StringLiteral('user1') [27-34]
 --
-GRANT `create user` ON t1 TO 'user1'
+GRANT `CREATE USER` ON t1 TO 'user1'
 ==
 
 grant create role on t1 to 'user1'
@@ -120,13 +113,13 @@ grant create role on t1 to 'user1'
 GrantStatement [0-34]
   Privileges [6-17]
     Privilege [6-17]
-      Identifier(`create role`) [6-17]
+      Identifier(`CREATE ROLE`) [6-17]
   PathExpression [21-23]
     Identifier(t1) [21-23]
   GranteeList [27-34]
     StringLiteral('user1') [27-34]
 --
-GRANT `create role` ON t1 TO 'user1'
+GRANT `CREATE ROLE` ON t1 TO 'user1'
 ==
 
 grant delete on t1 to 'user1'
@@ -176,13 +169,13 @@ grant drop deployment on t1 to 'user1'
 GrantStatement [0-38]
   Privileges [6-21]
     Privilege [6-21]
-      Identifier(`drop deployment`) [6-21]
+      Identifier(`DROP DEPLOYMENT`) [6-21]
   PathExpression [25-27]
     Identifier(t1) [25-27]
   GranteeList [31-38]
     StringLiteral('user1') [31-38]
 --
-GRANT `drop deployment` ON t1 TO 'user1'
+GRANT `DROP DEPLOYMENT` ON t1 TO 'user1'
 ==
 
 grant drop user on t1 to 'user1'
@@ -190,13 +183,13 @@ grant drop user on t1 to 'user1'
 GrantStatement [0-32]
   Privileges [6-15]
     Privilege [6-15]
-      Identifier(`drop user`) [6-15]
+      Identifier(`DROP USER`) [6-15]
   PathExpression [19-21]
     Identifier(t1) [19-21]
   GranteeList [25-32]
     StringLiteral('user1') [25-32]
 --
-GRANT `drop user` ON t1 TO 'user1'
+GRANT `DROP USER` ON t1 TO 'user1'
 ==
 
 grant drop role on t1 to 'user1'
@@ -204,13 +197,13 @@ grant drop role on t1 to 'user1'
 GrantStatement [0-32]
   Privileges [6-15]
     Privilege [6-15]
-      Identifier(`drop role`) [6-15]
+      Identifier(`DROP ROLE`) [6-15]
   PathExpression [19-21]
     Identifier(t1) [19-21]
   GranteeList [25-32]
     StringLiteral('user1') [25-32]
 --
-GRANT `drop role` ON t1 TO 'user1'
+GRANT `DROP ROLE` ON t1 TO 'user1'
 ==
 
 grant execute on t1 to 'user1'
@@ -232,13 +225,13 @@ grant grant option on t1 to 'user1'
 GrantStatement [0-35]
   Privileges [6-18]
     Privilege [6-18]
-      Identifier(`grant option`) [6-18]
+      Identifier(`GRANT OPTION`) [6-18]
   PathExpression [22-24]
     Identifier(t1) [22-24]
   GranteeList [28-35]
     StringLiteral('user1') [28-35]
 --
-GRANT `grant option` ON t1 TO 'user1'
+GRANT `GRANT OPTION` ON t1 TO 'user1'
 ==
 
 grant execute on t1 to 'user1' with grant option
@@ -302,13 +295,13 @@ grant show databases on t1 to 'user1'
 GrantStatement [0-37]
   Privileges [6-20]
     Privilege [6-20]
-      Identifier(`show databases`) [6-20]
+      Identifier(`SHOW DATABASES`) [6-20]
   PathExpression [24-26]
     Identifier(t1) [24-26]
   GranteeList [30-37]
     StringLiteral('user1') [30-37]
 --
-GRANT `show databases` ON t1 TO 'user1'
+GRANT `SHOW DATABASES` ON t1 TO 'user1'
 ==
 
 grant create user, drop user on t1 to 'user1'
@@ -316,15 +309,15 @@ grant create user, drop user on t1 to 'user1'
 GrantStatement [0-45]
   Privileges [6-28]
     Privilege [6-17]
-      Identifier(`create user`) [6-17]
+      Identifier(`CREATE USER`) [6-17]
     Privilege [19-28]
-      Identifier(`drop user`) [19-28]
+      Identifier(`DROP USER`) [19-28]
   PathExpression [32-34]
     Identifier(t1) [32-34]
   GranteeList [38-45]
     StringLiteral('user1') [38-45]
 --
-GRANT `create user`, `drop user` ON t1 TO 'user1'
+GRANT `CREATE USER`, `DROP USER` ON t1 TO 'user1'
 ==
 
 grant select, delete on table foo to 'user@google.com'
@@ -335,12 +328,13 @@ GrantStatement [0-54]
       Identifier(`select`) [6-12]
     Privilege [14-20]
       Identifier(delete) [14-20]
+  Identifier(table) [24-29]
   PathExpression [30-33]
     Identifier(foo) [30-33]
   GranteeList [37-54]
     StringLiteral('user@google.com') [37-54]
 --
-GRANT `select`, delete ON TABLE foo TO 'user@google.com'
+GRANT `select`, delete ON table foo TO 'user@google.com'
 ==
 
 grant select, delete on db1.t1 to 'user@google.com'
@@ -368,12 +362,13 @@ GrantStatement [0-54]
       Identifier(`select`) [6-12]
     Privilege [14-20]
       Identifier(`create`) [14-20]
+  Identifier(table) [24-29]
   PathExpression [30-33]
     Identifier(foo) [30-33]
   GranteeList [37-54]
     StringLiteral('user@google.com') [37-54]
 --
-GRANT `select`, `create` ON TABLE foo TO 'user@google.com'
+GRANT `select`, `create` ON table foo TO 'user@google.com'
 ==
 
 grant select, create user on t1 to 'user1'
@@ -383,19 +378,20 @@ GrantStatement [0-42]
     Privilege [6-12]
       Identifier(`select`) [6-12]
     Privilege [14-25]
-      Identifier(`create user`) [14-25]
+      Identifier(`CREATE USER`) [14-25]
   PathExpression [29-31]
     Identifier(t1) [29-31]
   GranteeList [35-42]
     StringLiteral('user1') [35-42]
 --
-GRANT `select`, `create user` ON t1 TO 'user1'
+GRANT `select`, `CREATE USER` ON t1 TO 'user1'
 ==
 
 grant all privileges on view foo to @user1, @@user2, 'mdbuser/bar1', 'mdbuser/bar2'
 --
 GrantStatement [0-83]
   Privileges [6-20]
+  Identifier(view) [24-28]
   PathExpression [29-32]
     Identifier(foo) [29-32]
   GranteeList [36-83]
@@ -406,8 +402,9 @@ GrantStatement [0-83]
         Identifier(user2) [46-51]
     StringLiteral('mdbuser/bar1') [53-67]
     StringLiteral('mdbuser/bar2') [69-83]
+
 --
-GRANT ALL PRIVILEGES ON VIEW foo TO @user1, @@user2, 'mdbuser/bar1', 'mdbuser/bar2'
+GRANT ALL PRIVILEGES ON view foo TO @user1, @@user2, 'mdbuser/bar1', 'mdbuser/bar2'
 ==
 
 grant all on datascape.foo to 'bar'
@@ -453,7 +450,7 @@ GrantStatement [0-27]
   Privileges [6-9]
   PathExpression [13-18]
     Identifier(db1) [13-16]
-    Identifier(`*`) [16-18]
+    Identifier(`*`) [17-18]
   GranteeList [22-27]
     StringLiteral('bar') [22-27]
 --
@@ -462,9 +459,18 @@ GRANT ALL PRIVILEGES ON db1.`*` TO 'bar'
 
 grant execute on script datascape.script_foo to 'group@google.com'
 --
-ERROR: Syntax error: Expected "." or keyword TO but got identifier "datascape" [at 1:25]
-grant execute on script datascape.script_foo to 'group@google.com'
-                        ^
+GrantStatement [0-66]
+  Privileges [6-13]
+    Privilege [6-13]
+      Identifier(execute) [6-13]
+  Identifier(script) [17-23]
+  PathExpression [24-44]
+    Identifier(datascape) [24-33]
+    Identifier(script_foo) [34-44]
+  GranteeList [48-66]
+    StringLiteral('group@google.com') [48-66]
+--
+GRANT execute ON script datascape.script_foo TO 'group@google.com'
 ==
 
 grant on foo to 'bar'
@@ -490,7 +496,7 @@ grant all on foo to bar
 
 grant all on foo
 --
-ERROR: Syntax error: Expected "." or keyword TO but got end of statement [at 1:17]
+ERROR: Syntax error: Expected keyword TO but got end of statement [at 1:17]
 grant all on foo
                 ^
 ==
@@ -535,13 +541,13 @@ RevokeStatement [0-45]
     Privilege [7-13]
       Identifier(`select`) [7-13]
     Privilege [15-27]
-      Identifier(`grant option`) [15-27]
+      Identifier(`GRANT OPTION`) [15-27]
   PathExpression [31-34]
     Identifier(foo) [31-34]
   GranteeList [40-45]
     StringLiteral('bar') [40-45]
 --
-REVOKE `select`, `grant option` ON foo FROM 'bar'
+REVOKE `select`, `GRANT OPTION` ON foo FROM 'bar'
 ==
 
 revoke delete on table foo from 'mdbuser/bar'
@@ -550,18 +556,20 @@ RevokeStatement [0-45]
   Privileges [7-13]
     Privilege [7-13]
       Identifier(delete) [7-13]
+  Identifier(table) [17-22]
   PathExpression [23-26]
     Identifier(foo) [23-26]
   GranteeList [32-45]
     StringLiteral('mdbuser/bar') [32-45]
 --
-REVOKE delete ON TABLE foo FROM 'mdbuser/bar'
+REVOKE delete ON table foo FROM 'mdbuser/bar'
 ==
 
 revoke all on table table from 'mdbuser/user', @user2, 'user3', @@user4;
 --
 RevokeStatement [0-71]
   Privileges [7-10]
+  Identifier(table) [14-19]
   PathExpression [20-25]
     Identifier(table) [20-25]
   GranteeList [31-71]
@@ -573,7 +581,7 @@ RevokeStatement [0-71]
       PathExpression [66-71]
         Identifier(user4) [66-71]
 --
-REVOKE ALL PRIVILEGES ON TABLE table FROM 'mdbuser/user', @user2, 'user3', @@user4
+REVOKE ALL PRIVILEGES ON table table FROM 'mdbuser/user', @user2, 'user3', @@user4
 ==
 
 revoke delete,update(col2) on view foo from 'mdbgroup/bar'
@@ -586,12 +594,13 @@ RevokeStatement [0-58]
       Identifier(`update`) [14-20]
       ColumnList [20-26]
         Identifier(col2) [21-25]
+  Identifier(view) [30-34]
   PathExpression [35-38]
     Identifier(foo) [35-38]
   GranteeList [44-58]
     StringLiteral('mdbgroup/bar') [44-58]
 --
-REVOKE delete, `update`(col2) ON VIEW foo FROM 'mdbgroup/bar'
+REVOKE delete, `update`(col2) ON view foo FROM 'mdbgroup/bar'
 ==
 
 revoke delete on table * from 'user1'
@@ -600,12 +609,13 @@ RevokeStatement [0-37]
   Privileges [7-13]
     Privilege [7-13]
       Identifier(delete) [7-13]
+  Identifier(table) [17-22]
   PathExpression [23-24]
     Identifier(`*`) [23-24]
   GranteeList [30-37]
     StringLiteral('user1') [30-37]
 --
-REVOKE delete ON TABLE `*` FROM 'user1'
+REVOKE delete ON table `*` FROM 'user1'
 ==
 
 revoke delete on table db1.foo from 'user1'
@@ -614,13 +624,14 @@ RevokeStatement [0-43]
   Privileges [7-13]
     Privilege [7-13]
       Identifier(delete) [7-13]
+  Identifier(table) [17-22]
   PathExpression [23-30]
     Identifier(db1) [23-26]
     Identifier(foo) [27-30]
   GranteeList [36-43]
     StringLiteral('user1') [36-43]
 --
-REVOKE delete ON TABLE db1.foo FROM 'user1'
+REVOKE delete ON table db1.foo FROM 'user1'
 ==
 
 revoke delete on table db1.* from 'user1'
@@ -629,28 +640,21 @@ RevokeStatement [0-41]
   Privileges [7-13]
     Privilege [7-13]
       Identifier(delete) [7-13]
+  Identifier(table) [17-22]
   PathExpression [23-28]
     Identifier(db1) [23-26]
-    Identifier(`*`) [26-28]
+    Identifier(`*`) [27-28]
   GranteeList [34-41]
     StringLiteral('user1') [34-41]
 --
-REVOKE delete ON TABLE db1.`*` FROM 'user1'
+REVOKE delete ON table db1.`*` FROM 'user1'
 ==
 
 revoke delete on table *.t1 from 'user1'
 --
-RevokeStatement [0-40]
-  Privileges [7-13]
-    Privilege [7-13]
-      Identifier(delete) [7-13]
-  PathExpression [23-27]
-    Identifier(`*`) [23-24]
-    Identifier(t1) [25-27]
-  GranteeList [33-40]
-    StringLiteral('user1') [33-40]
---
-REVOKE delete ON TABLE `*`.t1 FROM 'user1'
+ERROR: Syntax error: Expected keyword FROM but got "." [at 1:25]
+revoke delete on table *.t1 from 'user1'
+                        ^
 ==
 
 revoke delete on table *.* from 'user1'
@@ -659,18 +663,19 @@ RevokeStatement [0-39]
   Privileges [7-13]
     Privilege [7-13]
       Identifier(delete) [7-13]
+  Identifier(table) [17-22]
   PathExpression [23-26]
     Identifier(`*`) [23-24]
-    Identifier(`*`) [24-26]
+    Identifier(`*`) [25-26]
   GranteeList [32-39]
     StringLiteral('user1') [32-39]
 --
-REVOKE delete ON TABLE `*`.`*` FROM 'user1'
+REVOKE delete ON table `*`.`*` FROM 'user1'
 ==
 
 revoke all on view foo to 'mdbgroup/bar'
 --
-ERROR: Syntax error: Expected "." or keyword FROM but got keyword TO [at 1:24]
+ERROR: Syntax error: Expected keyword FROM but got keyword TO [at 1:24]
 revoke all on view foo to 'mdbgroup/bar'
                        ^
 ==
