@@ -141,6 +141,7 @@ constexpr KeywordInfoPOD kAllKeywords[] = {
     {"filter_fields", KW_FILTER_FIELDS},
     {"fill", KW_FILL},
     {"first", KW_FIRST},
+    {"flush", KW_FLUSH},
     {"following", KW_FOLLOWING, KeywordInfo::kReserved},
     {"for", KW_FOR, KeywordInfo::kReserved},
     {"foreign", KW_FOREIGN},
