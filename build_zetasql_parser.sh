@@ -21,12 +21,6 @@ set -eE
 pushd "$(dirname "$0")"
 pushd "$(git rev-parse --show-toplevel)"
 
-if [[ $(arch) = 'aarch64' ]]; then
-    git checkout .
-    # need upgrade abseil and bazel to compile on aarch64
-    git apply --verbose aarch64.patch
-fi
-
 echo "build with python: $(python -V), python3: $(python3 -V)"
 
 #===  FUNCTION  ================================================================
