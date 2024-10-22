@@ -98,6 +98,13 @@ install_gen_include_file() {
     local outfile
     outfile=$(echo "$file" | sed -e 's/^.*proto\///')
 
+    if [[ "$OSTYPE" == "linux-gnu"* ]]
+    then
+        INSTALL_BIN="install"
+    else
+        INSTALL_BIN="ginstall"
+    fi
+
     ${INSTALL_BIN} -Dv "$file" "$PREFIX/include/$outfile"
 }
 
