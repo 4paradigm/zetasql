@@ -464,6 +464,7 @@ fill { return BisonParserImpl::token::KW_FILL; }
 filter { return BisonParserImpl::token::KW_FILTER; }
 filter_fields { return BisonParserImpl::token::KW_FILTER_FIELDS; }
 first { return BisonParserImpl::token::KW_FIRST; }
+flush { return BisonParserImpl::token::KW_FLUSH; }
 following { return BisonParserImpl::token::KW_FOLLOWING; }
 for { return BisonParserImpl::token::KW_FOR; }
 foreign { return BisonParserImpl::token::KW_FOREIGN; }

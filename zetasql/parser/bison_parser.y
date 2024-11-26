@@ -920,6 +920,7 @@ using zetasql::ASTDropStatement;
 %token KW_SECURITY "SECURITY"
 %token KW_SESSION "SESSION"
 %token KW_SHOW "SHOW"
+%token KW_FLUSH "FLUSH"
 %token KW_SIMPLE "SIMPLE"
 %token KW_SOURCE "SOURCE"
 %token KW_SQL "SQL"
@@ -1302,6 +1303,7 @@ using zetasql::ASTDropStatement;
 %type <node> select_list
 %type <node> select_list_prefix
 %type <node> show_statement
+%type <node> flush_statement
 %type <node> target_name
 %type <identifier> show_target
 %type <identifier> show_with_name_target
@@ -1621,6 +1623,7 @@ sql_statement_body:
     | show_statement
     | drop_all_row_access_policies_statement
     | drop_statement
+    | flush_statement
     | call_statement
     | import_statement
     | module_statement
@@ -3720,6 +3723,14 @@ show_statement:
         $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3});
       }
     ;
+
+flush_statement:
+    "FLUSH" "PRIVILEGES"
+    {
+        $$ = MAKE_NODE(ASTFlushStatement, @$, {"PRIVILEGES"});
+    }
+    ;
+
 
 show_target:
   "MATERIALIZED" "VIEWS"

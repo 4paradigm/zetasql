@@ -1,0 +1,35 @@
+flush privileges;
+--
+FlushStatement [0-16]
+  Keyword(`PRIVILEGES`) [6-16]
+--
+FLUSH PRIVILEGES
+==
+
+flush privileges with extra;
+--
+ERROR: Syntax error: Expected end of input but got identifier "with" [at 1:19]
+flush privileges with extra;
+                   ^
+==
+
+flush privileges like;
+--
+ERROR: Syntax error: Expected end of input but got identifier "like" [at 1:18]
+flush privileges like;
+                  ^
+==
+
+flush;
+--
+ERROR: Syntax error: Expected "PRIVILEGES" but got ";" [at 1:6]
+flush;
+     ^
+==
+
+flush something else;
+--
+ERROR: Syntax error: Expected "PRIVILEGES" but got "something" [at 1:7]
+flush something else;
+      ^
+==
