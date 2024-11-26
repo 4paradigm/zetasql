@@ -771,10 +771,9 @@ java_library(
     if not native.existing_rule("jinja"):
         http_archive(
             name = "jinja",
-            # Jinja release 2.10
-            url = "https://github.com/pallets/jinja/archive/2.10.tar.gz",
-            strip_prefix = "jinja-2.10",
-            sha256 = "0d31d3466c313a9ca014a2d904fed18cdac873a5ba1f7b70b8fd8b206cd860d6",
+            url = "https://github.com/pallets/jinja/archive/3.0.1.tar.gz",
+            strip_prefix = "jinja-3.0.1/src",
+            sha256 = "1e37a6f86c29fa8ace108ea72b41d2d5c5bd67d79be14bfeca3ba6eb37d789de",
             build_file_content = """py_library(
     name = "jinja2",
     visibility = ["//visibility:public"],
@@ -802,10 +801,10 @@ java_library(
         http_archive(
             name = "markupsafe",
             urls = [
-                "https://github.com/pallets/markupsafe/archive/1.0.tar.gz",
+                "https://github.com/pallets/markupsafe/archive/2.1.1.tar.gz",
             ],
-            sha256 = "dc3938045d9407a73cf9fdd709e2b1defd0588d50ffc85eb0786c095ec846f15",
-            strip_prefix = "markupsafe-1.0/markupsafe",
+            sha256 = "0f83b6d1bf6fa65546221d42715034e7e654845583a84906c5936590f9a7ad8f",
+            strip_prefix = "markupsafe-2.1.1/src/markupsafe",
             build_file_content = """py_library(
     name = "markupsafe",
     visibility = ["//visibility:public"],

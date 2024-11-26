@@ -133,10 +133,10 @@ jobs:
         run: |
           sdkmanager tools "platforms;android-27" "platforms;android-28" "platforms;android-29" "platforms;android-30"
 
-      - name: setup python3.9
+      - name: setup python3.10
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: install bazelisk
         run: |
